@@ -3,9 +3,7 @@ import { Link } from '@remix-run/react'
 import { Logo } from '~/components/logo'
 import { buttonVariants } from '~/components/ui/button'
 
-export const meta: MetaFunction = () => {
-  return [{ title: 'Welcome' }]
-}
+export const meta: MetaFunction = () => [{ title: 'Welcome' }]
 
 export default function Component() {
   return (
