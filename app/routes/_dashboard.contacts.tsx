@@ -1,6 +1,6 @@
 import { MagnifyingGlassIcon, PlusIcon } from '@radix-ui/react-icons'
 import type { MetaFunction } from '@remix-run/node'
-import { Form, NavLink } from '@remix-run/react'
+import { Form, NavLink, Outlet } from '@remix-run/react'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { cx } from '~/utils/misc'
@@ -10,6 +10,11 @@ export const meta: MetaFunction = () => [{ title: 'Contacts' }]
 export default function Component() {
   return (
     <>
+      <main className="pl-96">
+        <div className="mx-auto max-w-3xl p-6">
+          <Outlet />
+        </div>
+      </main>
       <aside className="fixed inset-y-0 flex w-96 flex-col border-r">
         <div className="sticky top-0 z-40 flex w-full gap-4 border-b border-border bg-background/90 p-4 backdrop-blur-sm">
           <search role="search" className="flex-1">
@@ -40,14 +45,14 @@ export default function Component() {
           </Form>
         </div>
         <nav className="flex-1 p-4">
-          <ul className="-mx-2">
+          <ul>
             <li>
               <NavLink
                 to={`1`}
                 prefetch="intent"
                 className={({ isActive, isPending }) =>
                   cx(
-                    'group flex items-center gap-2 rounded-md p-2 text-sm transition-all',
+                    'group flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-all',
                     isPending ? 'text-primary' : '',
                     isActive || isPending ? 'bg-muted' : 'hover:bg-muted',
                   )
@@ -58,11 +63,11 @@ export default function Component() {
             </li>
             <li>
               <NavLink
-                to={`1`}
+                to={`2`}
                 prefetch="intent"
                 className={({ isActive, isPending }) =>
                   cx(
-                    'group flex items-center gap-2 rounded-md p-2 text-sm transition-all',
+                    'group flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-all',
                     isPending ? 'text-primary' : '',
                     isActive || isPending ? 'bg-muted' : 'hover:bg-muted',
                   )
