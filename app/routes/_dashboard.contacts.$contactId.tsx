@@ -38,7 +38,7 @@ export default function Component() {
       <div className="ml-5 flex w-full min-w-0 items-center gap-3 pb-1">
         <h1
           className={cx(
-            'text-3xl font-bold tracking-tight',
+            'text-2xl font-semibold tracking-tight',
             contact.first || contact.last ? '' : 'text-muted-foreground',
           )}
         >
