@@ -1,13 +1,29 @@
-import { MagnifyingGlassIcon, PlusIcon } from '@radix-ui/react-icons'
-import type { MetaFunction } from '@remix-run/node'
-import { Form, NavLink, Outlet } from '@remix-run/react'
+import {
+  MagnifyingGlassIcon,
+  PlusIcon,
+  StarFilledIcon,
+} from '@radix-ui/react-icons'
+import { json, type MetaFunction } from '@remix-run/node'
+import { Form, NavLink, Outlet, useLoaderData } from '@remix-run/react'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
+import { prisma } from '~/utils/db.server'
 import { cx } from '~/utils/misc'
 
 export const meta: MetaFunction = () => [{ title: 'Contacts' }]
 
+export async function loader() {
+  const contacts = await prisma.contact.findMany({
+    select: { id: true, first: true, last: true, avatar: true, favorite: true },
+    orderBy: [{ last: 'desc' }, { createdAt: 'desc' }],
+  })
+
+  return json({ contacts })
+}
+
 export default function Component() {
+  const { contacts } = useLoaderData<typeof loader>()
+
   return (
     <>
       <main className="pl-96">
@@ -45,38 +61,55 @@ export default function Component() {
           </Form>
         </div>
         <nav className="flex-1 p-4">
-          <ul>
-            <li>
-              <NavLink
-                to={`1`}
-                prefetch="intent"
-                className={({ isActive, isPending }) =>
-                  cx(
-                    'group flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-all',
-                    isPending ? 'text-primary' : '',
-                    isActive || isPending ? 'bg-muted' : 'hover:bg-muted',
-                  )
-                }
-              >
-                <span className="flex-auto truncate">Your Friend</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to={`2`}
-                prefetch="intent"
-                className={({ isActive, isPending }) =>
-                  cx(
-                    'group flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-all',
-                    isPending ? 'text-primary' : '',
-                    isActive || isPending ? 'bg-muted' : 'hover:bg-muted',
-                  )
-                }
-              >
-                <span className="flex-auto truncate">Your Name</span>
-              </NavLink>
-            </li>
-          </ul>
+          {contacts.length ? (
+            <ul>
+              {contacts.map((contact) => (
+                <li key={contact.id}>
+                  <NavLink
+                    to={contact.id}
+                    prefetch="intent"
+                    className={({ isActive, isPending }) =>
+                      cx(
+                        'group flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-all',
+                        isPending
+                          ? 'text-primary'
+                          : contact.first || contact.last
+                            ? ''
+                            : 'text-muted-foreground',
+                        isActive || isPending ? 'bg-muted' : 'hover:bg-muted',
+                      )
+                    }
+                  >
+                    {({ isActive }) => (
+                      <>
+                        <span className="flex-auto truncate">
+                          {contact.first || contact.last ? (
+                            <>
+                              {contact.first} {contact.last}
+                            </>
+                          ) : (
+                            'No Name'
+                          )}
+                        </span>
+                        {contact.favorite ? (
+                          <StarFilledIcon
+                            className={cx(
+                              'size-4 flex-none',
+                              isActive
+                                ? ''
+                                : 'text-muted-foreground group-hover:text-foreground',
+                            )}
+                          />
+                        ) : null}
+                      </>
+                    )}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-muted-foreground">No contacts</p>
+          )}
         </nav>
       </aside>
     </>
