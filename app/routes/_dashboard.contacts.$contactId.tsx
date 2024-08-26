@@ -6,13 +6,27 @@ import {
   StarIcon,
   TrashIcon,
 } from '@radix-ui/react-icons';
-import { json, type LoaderFunctionArgs } from '@remix-run/node';
+import {
+  json,
+  type LoaderFunctionArgs,
+  type MetaFunction,
+} from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { Toggle } from '~/components/ui/toggle';
 import { prisma } from '~/utils/db.server';
 import { cx } from '~/utils/misc';
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
+  {
+    title: data?.contact
+      ? data.contact.first || data.contact.last
+        ? `${data.contact.first} ${data.contact.last}`
+        : 'No Name'
+      : 'No contact found',
+  },
+];
 
 export async function loader({ params }: LoaderFunctionArgs) {
   invariant(params.contactId, 'Missing contactId param');
