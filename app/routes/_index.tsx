@@ -1,9 +1,9 @@
-import type { MetaFunction } from '@remix-run/node'
-import { Link } from '@remix-run/react'
-import { Logo } from '~/components/logo'
-import { buttonVariants } from '~/components/ui/button'
+import type { MetaFunction } from '@remix-run/node';
+import { Link } from '@remix-run/react';
+import { Logo } from '~/components/logo';
+import { buttonVariants } from '~/components/ui/button';
 
-export const meta: MetaFunction = () => [{ title: 'Welcome' }]
+export const meta: MetaFunction = () => [{ title: 'Welcome' }];
 
 export default function Component() {
   return (
@@ -28,5 +28,5 @@ export default function Component() {
         </div>
       </div>
     </div>
-  )
+  );
 }

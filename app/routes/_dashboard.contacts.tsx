@@ -2,27 +2,27 @@ import {
   MagnifyingGlassIcon,
   PlusIcon,
   StarFilledIcon,
-} from '@radix-ui/react-icons'
-import { json, type MetaFunction } from '@remix-run/node'
-import { Form, NavLink, Outlet, useLoaderData } from '@remix-run/react'
-import { Button } from '~/components/ui/button'
-import { Input } from '~/components/ui/input'
-import { prisma } from '~/utils/db.server'
-import { cx } from '~/utils/misc'
+} from '@radix-ui/react-icons';
+import { json, type MetaFunction } from '@remix-run/node';
+import { Form, NavLink, Outlet, useLoaderData } from '@remix-run/react';
+import { Button } from '~/components/ui/button';
+import { Input } from '~/components/ui/input';
+import { prisma } from '~/utils/db.server';
+import { cx } from '~/utils/misc';
 
-export const meta: MetaFunction = () => [{ title: 'Contacts' }]
+export const meta: MetaFunction = () => [{ title: 'Contacts' }];
 
 export async function loader() {
   const contacts = await prisma.contact.findMany({
     select: { id: true, first: true, last: true, avatar: true, favorite: true },
     orderBy: [{ last: 'desc' }, { createdAt: 'desc' }],
-  })
+  });
 
-  return json({ contacts })
+  return json({ contacts });
 }
 
 export default function Component() {
-  const { contacts } = useLoaderData<typeof loader>()
+  const { contacts } = useLoaderData<typeof loader>();
 
   return (
     <>
@@ -113,5 +113,5 @@ export default function Component() {
         </nav>
       </aside>
     </>
-  )
+  );
 }

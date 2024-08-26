@@ -1,5 +1,5 @@
-import { remember } from '@epic-web/remember'
-import { PrismaClient } from '@prisma/client'
+import { remember } from '@epic-web/remember';
+import { PrismaClient } from '@prisma/client';
 
 export const prisma = remember('prisma', () => {
   // NOTE: if you change anything in this function you'll need to restart
@@ -7,8 +7,8 @@ export const prisma = remember('prisma', () => {
 
   const client = new PrismaClient({
     log: ['query', 'info', 'warn', 'error'],
-  })
-  void client.$connect()
+  });
+  void client.$connect();
 
-  return client
-})
+  return client;
+});

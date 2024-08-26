@@ -1,5 +1,5 @@
-import { Outlet } from '@remix-run/react'
-import { Logo } from '~/components/logo'
+import { Outlet } from '@remix-run/react';
+import { Logo } from '~/components/logo';
 
 export default function Component() {
   return (
@@ -19,5 +19,5 @@ export default function Component() {
         <Outlet />
       </div>
     </div>
-  )
+  );
 }

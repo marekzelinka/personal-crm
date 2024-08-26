@@ -3,12 +3,12 @@ import {
   StarFilledIcon,
   StarIcon,
   TrashIcon,
-} from '@radix-ui/react-icons'
-import { Form } from '@remix-run/react'
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-import { Button } from '~/components/ui/button'
-import { Toggle } from '~/components/ui/toggle'
-import { cx } from '~/utils/misc'
+} from '@radix-ui/react-icons';
+import { Form } from '@remix-run/react';
+import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
+import { Button } from '~/components/ui/button';
+import { Toggle } from '~/components/ui/toggle';
+import { cx } from '~/utils/misc';
 
 export default function Component() {
   const contact = {
@@ -16,7 +16,7 @@ export default function Component() {
     last: 'Name',
     avatar: 'https://robohash.org/you.png?size=200x200',
     favorite: true,
-  }
+  };
 
   return (
     <div className="flex items-end">
@@ -64,10 +64,10 @@ export default function Component() {
           onSubmit={(event) => {
             const shouldDelete = confirm(
               'Please confirm you want to delete this record.',
-            )
+            );
 
             if (!shouldDelete) {
-              event.preventDefault()
+              event.preventDefault();
             }
           }}
         >
@@ -79,11 +79,11 @@ export default function Component() {
         </Form>
       </div>
     </div>
-  )
+  );
 }
 
 function Favorite({ contact }: { contact: { favorite: boolean } }) {
-  const favorite = contact.favorite
+  const favorite = contact.favorite;
 
   return (
     <Form method="POST">
@@ -107,5 +107,5 @@ function Favorite({ contact }: { contact: { favorite: boolean } }) {
         )}
       </Toggle>
     </Form>
-  )
+  );
 }
