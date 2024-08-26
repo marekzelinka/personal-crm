@@ -61,7 +61,7 @@ export default function Component() {
           <AvatarImage src={contact.avatar ?? undefined} alt="" />
           <AvatarFallback>
             <svg
-              className="h-full w-full text-muted-foreground"
+              className="h-full w-full text-primary-foreground"
               fill="currentColor"
               viewBox="0 0 24 24"
               aria-hidden
