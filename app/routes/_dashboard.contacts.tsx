@@ -3,7 +3,7 @@ import {
   PlusIcon,
   StarFilledIcon,
 } from '@radix-ui/react-icons';
-import { json, type MetaFunction } from '@remix-run/node';
+import { json, redirect, type MetaFunction } from '@remix-run/node';
 import { Form, NavLink, Outlet, useLoaderData } from '@remix-run/react';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
@@ -27,7 +27,7 @@ export async function action() {
     data: {},
   });
 
-  return json({ contact });
+  return redirect(`/contacts/${contact.id}/edit`);
 }
 
 export default function Component() {
