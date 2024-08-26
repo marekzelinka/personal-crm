@@ -1,22 +1,44 @@
+import { invariant, invariantResponse } from '@epic-web/invariant';
+import type { Contact } from '@prisma/client';
 import {
   Pencil1Icon,
   StarFilledIcon,
   StarIcon,
   TrashIcon,
 } from '@radix-ui/react-icons';
-import { Form } from '@remix-run/react';
+import { json, type LoaderFunctionArgs } from '@remix-run/node';
+import { Form, useLoaderData } from '@remix-run/react';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { Toggle } from '~/components/ui/toggle';
+import { prisma } from '~/utils/db.server';
 import { cx } from '~/utils/misc';
 
+export async function loader({ params }: LoaderFunctionArgs) {
+  invariant(params.contactId, 'Missing contactId param');
+  const contact = await prisma.contact.findUnique({
+    select: {
+      id: true,
+      first: true,
+      last: true,
+      avatar: true,
+      favorite: true,
+    },
+    where: {
+      id: params.contactId,
+    },
+  });
+  invariantResponse(
+    contact,
+    `No contact with the id "${params.contactId}" exists.`,
+    { status: 404 },
+  );
+
+  return json({ contact });
+}
+
 export default function Component() {
-  const contact = {
-    first: 'Your',
-    last: 'Name',
-    avatar: 'https://robohash.org/you.png?size=200x200',
-    favorite: true,
-  };
+  const { contact } = useLoaderData<typeof loader>();
 
   return (
     <div className="flex items-end">
@@ -72,7 +94,7 @@ export default function Component() {
           }}
         >
           <input type="hidden" name="intent" value="delete" />
-          <Button type="submit" variant="destructive">
+          <Button type="submit" variant="outline">
             <TrashIcon className="mr-2 size-4" />
             Delete
           </Button>
@@ -82,8 +104,8 @@ export default function Component() {
   );
 }
 
-function Favorite({ contact }: { contact: { favorite: boolean } }) {
-  const favorite = contact.favorite;
+function Favorite({ contact }: { contact: Pick<Contact, 'favorite'> }) {
+  const favorite = Boolean(contact.favorite);
 
   return (
     <Form method="POST">
