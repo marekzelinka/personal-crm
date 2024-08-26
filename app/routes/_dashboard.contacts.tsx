@@ -21,6 +21,15 @@ export async function loader() {
   return json({ contacts });
 }
 
+export async function action() {
+  const contact = await prisma.contact.create({
+    select: { id: true },
+    data: {},
+  });
+
+  return json({ contact });
+}
+
 export default function Component() {
   const { contacts } = useLoaderData<typeof loader>();
 
