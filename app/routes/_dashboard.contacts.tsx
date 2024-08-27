@@ -1,23 +1,34 @@
+import { PlusIcon, StarFilledIcon } from '@radix-ui/react-icons';
 import {
-  MagnifyingGlassIcon,
-  PlusIcon,
-  StarFilledIcon,
-} from '@radix-ui/react-icons';
-import { json, redirect, type MetaFunction } from '@remix-run/node';
+  json,
+  redirect,
+  type LoaderFunctionArgs,
+  type MetaFunction,
+} from '@remix-run/node';
 import { Form, NavLink, Outlet, useLoaderData } from '@remix-run/react';
+import { matchSorter } from 'match-sorter';
+import sortBy from 'sort-by';
 import { LoadingOverlay } from '~/components/loading-overlay';
+import { SearchBar } from '~/components/search-bar';
 import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
 import { prisma } from '~/utils/db.server';
 import { cx } from '~/utils/misc';
 
 export const meta: MetaFunction = () => [{ title: 'Contacts' }];
 
-export async function loader() {
-  const contacts = await prisma.contact.findMany({
+export async function loader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url);
+  const q = url.searchParams.get('q');
+
+  let contacts = await prisma.contact.findMany({
     select: { id: true, first: true, last: true, avatar: true, favorite: true },
-    orderBy: [{ last: 'desc' }, { createdAt: 'desc' }],
   });
+
+  if (q) {
+    contacts = matchSorter(contacts, q, { keys: ['first', 'last'] });
+  }
+
+  contacts = contacts.sort(sortBy('last', 'createdAt'));
 
   return json({ contacts });
 }
@@ -46,24 +57,7 @@ export default function Component() {
       <aside className="fixed inset-y-0 flex w-96 flex-col border-r">
         <div className="sticky top-0 z-40 flex w-full gap-4 border-b border-border bg-background/90 p-4 backdrop-blur-sm">
           <search role="search" className="flex-1">
-            <Form>
-              <div className="relative">
-                <div
-                  className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
-                  aria-hidden
-                >
-                  <MagnifyingGlassIcon className="size-4 text-muted-foreground" />
-                </div>
-                <Input
-                  type="search"
-                  name="q"
-                  id="q"
-                  className="pl-8"
-                  placeholder="Search"
-                  aria-label="Search contacts"
-                />
-              </div>
-            </Form>
+            <SearchBar />
           </search>
           <Form method="POST">
             <Button type="submit" aria-label="New contact">
