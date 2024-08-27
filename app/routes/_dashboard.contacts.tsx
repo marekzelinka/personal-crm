@@ -5,6 +5,7 @@ import {
 } from '@radix-ui/react-icons';
 import { json, redirect, type MetaFunction } from '@remix-run/node';
 import { Form, NavLink, Outlet, useLoaderData } from '@remix-run/react';
+import { LoadingOverlay } from '~/components/loading-overlay';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { prisma } from '~/utils/db.server';
@@ -37,7 +38,9 @@ export default function Component() {
     <>
       <main className="pl-96">
         <div className="mx-auto max-w-3xl p-6">
-          <Outlet />
+          <LoadingOverlay>
+            <Outlet />
+          </LoadingOverlay>
         </div>
       </main>
       <aside className="fixed inset-y-0 flex w-96 flex-col border-r">
