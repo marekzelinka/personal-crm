@@ -8,6 +8,8 @@ import {
 } from '@radix-ui/react-icons';
 import {
   json,
+  redirect,
+  type ActionFunctionArgs,
   type LoaderFunctionArgs,
   type MetaFunction,
 } from '@remix-run/node';
@@ -49,6 +51,35 @@ export async function loader({ params }: LoaderFunctionArgs) {
   );
 
   return json({ contact });
+}
+
+export async function action({ request, params }: ActionFunctionArgs) {
+  invariant(params.contactId, 'Missing contactId param');
+  const contact = await prisma.contact.findUnique({
+    select: { id: true },
+    where: { id: params.contactId },
+  });
+  invariantResponse(
+    contact,
+    `No contact with the id "${params.contactId}" exists.`,
+    { status: 404 },
+  );
+
+  const formData = await request.formData();
+
+  if (formData.get('intent') === 'delete') {
+    await prisma.contact.delete({
+      select: { id: true },
+      where: { id: contact.id },
+    });
+
+    return redirect('/contacts');
+  }
+
+  invariantResponse(
+    false,
+    `Invalid intent: ${formData.get('intent') ?? 'Missing'}`,
+  );
 }
 
 export default function Component() {
