@@ -13,7 +13,7 @@ import {
   type LoaderFunctionArgs,
   type MetaFunction,
 } from '@remix-run/node';
-import { Form, useLoaderData } from '@remix-run/react';
+import { Form, useFetcher, useLoaderData } from '@remix-run/react';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { Toggle } from '~/components/ui/toggle';
@@ -161,11 +161,14 @@ export default function Component() {
   );
 }
 
-function Favorite({ contact }: { contact: Pick<Contact, 'favorite'> }) {
-  const favorite = Boolean(contact.favorite);
+function Favorite({ contact }: { contact: Pick<Contact, 'id' | 'favorite'> }) {
+  const fetcher = useFetcher({ key: `contact:${contact.id}` });
+  const favorite = fetcher.formData
+    ? fetcher.formData.get('favorite') === 'true'
+    : Boolean(contact.favorite);
 
   return (
-    <Form method="POST">
+    <fetcher.Form method="POST">
       <input type="hidden" name="intent" value="favorite" />
       <input
         type="hidden"
@@ -185,6 +188,6 @@ function Favorite({ contact }: { contact: Pick<Contact, 'favorite'> }) {
           <StarIcon className="size-4" />
         )}
       </Toggle>
-    </Form>
+    </fetcher.Form>
   );
 }
