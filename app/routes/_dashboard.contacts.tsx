@@ -1,3 +1,4 @@
+import type { Contact } from '@prisma/client';
 import { PlusIcon, StarFilledIcon } from '@radix-ui/react-icons';
 import {
   json,
@@ -5,8 +6,15 @@ import {
   type LoaderFunctionArgs,
   type MetaFunction,
 } from '@remix-run/node';
-import { Form, NavLink, Outlet, useLoaderData } from '@remix-run/react';
+import {
+  Form,
+  NavLink,
+  Outlet,
+  useFetcher,
+  useLoaderData,
+} from '@remix-run/react';
 import { matchSorter } from 'match-sorter';
+import type { PropsWithChildren } from 'react';
 import sortBy from 'sort-by';
 import { LoadingOverlay } from '~/components/loading-overlay';
 import { SearchBar } from '~/components/search-bar';
@@ -76,7 +84,7 @@ export default function Component() {
                     prefetch="intent"
                     className={({ isActive, isPending }) =>
                       cx(
-                        'group flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-all',
+                        'group flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
                         isPending
                           ? 'text-primary'
                           : contact.first || contact.last
@@ -97,16 +105,16 @@ export default function Component() {
                             'No Name'
                           )}
                         </span>
-                        {contact.favorite ? (
+                        <Favorite contact={contact}>
                           <StarFilledIcon
                             className={cx(
                               'size-4 flex-none',
                               isActive
-                                ? ''
-                                : 'text-muted-foreground group-hover:text-foreground',
+                                ? 'text-muted-foreground'
+                                : 'text-muted group-hover:text-muted-foreground',
                             )}
                           />
-                        ) : null}
+                        </Favorite>
                       </>
                     )}
                   </NavLink>
@@ -120,4 +128,22 @@ export default function Component() {
       </aside>
     </>
   );
+}
+
+function Favorite({
+  contact,
+  children,
+}: PropsWithChildren<{
+  contact: Pick<Contact, 'id' | 'favorite'>;
+}>) {
+  const fetcher = useFetcher({ key: `contact:${contact.id}` });
+  const favorite = fetcher.formData
+    ? fetcher.formData.get('favorite') === 'true'
+    : Boolean(contact.favorite);
+
+  if (!favorite) {
+    return null;
+  }
+
+  return children;
 }
