@@ -18,7 +18,7 @@ export function SearchBar() {
 
   const navigation = useNavigation();
   const isSearching = new URLSearchParams(navigation.location?.search).has('q');
-  const shouldShowSipper = useSpinDelay(isSearching);
+  const shouldShowSpinner = useSpinDelay(isSearching);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -44,7 +44,7 @@ export function SearchBar() {
           className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
           aria-hidden
         >
-          {shouldShowSipper ? (
+          {shouldShowSpinner ? (
             <UpdateIcon className="size-4 animate-spin text-muted-foreground" />
           ) : (
             <MagnifyingGlassIcon className="size-4 text-muted-foreground" />
