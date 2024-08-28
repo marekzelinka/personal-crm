@@ -1,20 +1,20 @@
-import { cx } from "~/utils/misc"
+import { cx } from '~/utils/misc';
 
-export type ListOfErrors = Array<string | null | undefined> | null | undefined
+export type ListOfErrors = Array<string | null | undefined> | null | undefined;
 
 export function ErrorList({
   id,
   errors,
   className,
 }: {
-  id?: string
-  errors?: ListOfErrors
-  className?: string
+  id?: string;
+  errors?: ListOfErrors;
+  className?: string;
 }) {
-  const errorsToShow = errors?.filter(Boolean)
+  const errorsToShow = errors?.filter(Boolean);
 
   if (!errorsToShow?.length) {
-    return null
+    return null;
   }
 
   return (
@@ -25,5 +25,5 @@ export function ErrorList({
         </li>
       ))}
     </ul>
-  )
+  );
 }
