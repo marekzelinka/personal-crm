@@ -15,6 +15,7 @@ import {
   useNavigate,
 } from '@remix-run/react';
 import { z } from 'zod';
+import { GeneralErrorBoundary } from '~/components/error-boundary';
 import { ErrorList } from '~/components/forms';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
@@ -90,6 +91,10 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
 
   return redirect(`/contacts/${params.contactId}`);
+}
+
+export function ErrorBoundary() {
+  return <GeneralErrorBoundary />;
 }
 
 export default function Component() {

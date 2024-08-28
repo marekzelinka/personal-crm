@@ -1,4 +1,4 @@
-import { PlusIcon } from '@heroicons/react/16/solid';
+import { PlusIcon } from '@radix-ui/react-icons';
 import { Form } from '@remix-run/react';
 import { EmptyState } from '~/components/empty-state';
 import { Button } from '~/components/ui/button';

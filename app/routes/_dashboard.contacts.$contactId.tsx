@@ -14,6 +14,7 @@ import {
   type MetaFunction,
 } from '@remix-run/node';
 import { Form, useFetcher, useLoaderData } from '@remix-run/react';
+import { GeneralErrorBoundary } from '~/components/error-boundary';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { Toggle } from '~/components/ui/toggle';
@@ -92,6 +93,10 @@ export async function action({ request, params }: ActionFunctionArgs) {
     false,
     `Invalid intent: ${formData.get('intent') ?? 'Missing'}`,
   );
+}
+
+export function ErrorBoundary() {
+  return <GeneralErrorBoundary />;
 }
 
 export default function Component() {
