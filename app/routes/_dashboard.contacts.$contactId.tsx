@@ -67,10 +67,22 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   const formData = await request.formData();
 
+  if (formData.get('intent') === 'favorite') {
+    const favorite = formData.get('favorite');
+
+    await prisma.contact.update({
+      select: { id: true },
+      data: { favorite: favorite === 'true' },
+      where: { id: params.contactId },
+    });
+
+    return json({ ok: true });
+  }
+
   if (formData.get('intent') === 'delete') {
     await prisma.contact.delete({
       select: { id: true },
-      where: { id: contact.id },
+      where: { id: params.contactId },
     });
 
     return redirect('/contacts');
