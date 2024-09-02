@@ -1,6 +1,10 @@
 import { getFormProps, getInputProps, useForm } from '@conform-to/react';
 import { getZodConstraint, parseWithZod } from '@conform-to/zod';
-import { json, type ActionFunctionArgs } from '@remix-run/node';
+import {
+  json,
+  type ActionFunctionArgs,
+  type MetaFunction,
+} from '@remix-run/node';
 import { Form, Link, useActionData, useSearchParams } from '@remix-run/react';
 import { z } from 'zod';
 import { ErrorList } from '~/components/forms';
@@ -45,6 +49,8 @@ const CreateAccountSchema = z.object({
     .trim()
     .min(6, 'Password is too short'),
 });
+
+export const meta: MetaFunction = () => [{ title: 'Sign up' }];
 
 export async function action({ request }: ActionFunctionArgs) {
   const url = new URL(request.url);
@@ -113,8 +119,9 @@ export default function Component() {
     lastResult: actionData?.result,
     shouldValidate: 'onBlur',
     shouldRevalidate: 'onInput',
-    onValidate: ({ formData }) =>
-      parseWithZod(formData, { schema: CreateAccountSchema }),
+    onValidate: ({ formData }) => {
+      return parseWithZod(formData, { schema: CreateAccountSchema });
+    },
   });
 
   const [searchParams] = useSearchParams();
