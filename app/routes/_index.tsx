@@ -2,11 +2,12 @@ import type { MetaFunction } from '@remix-run/node';
 import { Link } from '@remix-run/react';
 import { Logo } from '~/components/logo';
 import { buttonVariants } from '~/components/ui/button';
+import { useOptionalUser } from '~/utils/user';
 
 export const meta: MetaFunction = () => [{ title: 'Welcome' }];
 
 export default function Component() {
-  const user = null;
+  const user = useOptionalUser();
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12">
