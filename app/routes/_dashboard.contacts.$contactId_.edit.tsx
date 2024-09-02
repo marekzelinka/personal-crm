@@ -108,8 +108,9 @@ export default function Component() {
     lastResult: actionData?.result,
     shouldValidate: 'onBlur',
     shouldRevalidate: 'onInput',
-    onValidate: ({ formData }) =>
-      parseWithZod(formData, { schema: EditContactSchema }),
+    onValidate: ({ formData }) => {
+      return parseWithZod(formData, { schema: EditContactSchema });
+    },
   });
 
   return (
