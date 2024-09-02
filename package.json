@@ -16,7 +16,7 @@
     "@conform-to/zod": "^1.1.5",
     "@epic-web/invariant": "^1.0.0",
     "@epic-web/remember": "^1.1.0",
-    "@prisma/client": "5.18.0",
+    "@prisma/client": "5.19.0",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-label": "^2.1.0",
