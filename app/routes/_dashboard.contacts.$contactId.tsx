@@ -18,6 +18,7 @@ import { GeneralErrorBoundary } from '~/components/error-boundary';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { Toggle } from '~/components/ui/toggle';
+import { requireUserId } from '~/utils/auth.server';
 import { prisma } from '~/utils/db.server';
 import { cx } from '~/utils/misc';
 
@@ -31,19 +32,13 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => [
   },
 ];
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  const userId = await requireUserId(request);
+
   invariant(params.contactId, 'Missing contactId param');
   const contact = await prisma.contact.findUnique({
-    select: {
-      id: true,
-      first: true,
-      last: true,
-      avatar: true,
-      favorite: true,
-    },
-    where: {
-      id: params.contactId,
-    },
+    select: { id: true, first: true, last: true, avatar: true, favorite: true },
+    where: { id: params.contactId, userId },
   });
   invariantResponse(
     contact,
@@ -55,10 +50,12 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
+  const userId = await requireUserId(request);
+
   invariant(params.contactId, 'Missing contactId param');
   const contact = await prisma.contact.findUnique({
     select: { id: true },
-    where: { id: params.contactId },
+    where: { id: params.contactId, userId },
   });
   invariantResponse(
     contact,
@@ -74,7 +71,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     await prisma.contact.update({
       select: { id: true },
       data: { favorite: favorite === 'true' },
-      where: { id: params.contactId },
+      where: { id: params.contactId, userId },
     });
 
     return json({ ok: true });
@@ -83,7 +80,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   if (formData.get('intent') === 'delete') {
     await prisma.contact.delete({
       select: { id: true },
-      where: { id: params.contactId },
+      where: { id: params.contactId, userId },
     });
 
     return redirect('/contacts');
