@@ -3,6 +3,7 @@ import { PlusIcon, StarFilledIcon } from '@radix-ui/react-icons';
 import {
   json,
   redirect,
+  type ActionFunctionArgs,
   type LoaderFunctionArgs,
   type MetaFunction,
 } from '@remix-run/node';
@@ -19,17 +20,21 @@ import sortBy from 'sort-by';
 import { LoadingOverlay } from '~/components/loading-overlay';
 import { SearchBar } from '~/components/search-bar';
 import { Button } from '~/components/ui/button';
+import { requireUserId } from '~/utils/auth.server';
 import { prisma } from '~/utils/db.server';
 import { cx } from '~/utils/misc';
 
 export const meta: MetaFunction = () => [{ title: 'Contacts' }];
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const userId = await requireUserId(request);
+
   const url = new URL(request.url);
   const q = url.searchParams.get('q');
 
   let contacts = await prisma.contact.findMany({
     select: { id: true, first: true, last: true, avatar: true, favorite: true },
+    where: { userId },
   });
 
   if (q) {
@@ -41,10 +46,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({ contacts });
 }
 
-export async function action() {
+export async function action({ request }: ActionFunctionArgs) {
+  const userId = await requireUserId(request);
+
   const contact = await prisma.contact.create({
     select: { id: true },
-    data: {},
+    data: { user: { connect: { id: userId } } },
   });
 
   return redirect(`/contacts/${contact.id}/edit`);
