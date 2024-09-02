@@ -1,23 +1,50 @@
-import { Outlet } from '@remix-run/react';
+import { ExitIcon } from '@radix-ui/react-icons';
+import { Form, Outlet } from '@remix-run/react';
 import { Logo } from '~/components/logo';
+import { Button } from '~/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '~/components/ui/tooltip';
 
 export default function Component() {
   return (
-    <div className="bg-background">
-      <nav className="fixed inset-y-0 left-0 z-10 border-r bg-background">
-        <div className="h-full">
-          <div className="flex h-full w-14 flex-col items-center">
-            <div className="flex flex-col items-center gap-4 px-2 py-5">
-              <div className="flex-none">
-                <Logo className="h-9 w-auto" />
-              </div>
-            </div>
-          </div>
+    <>
+      <nav className="fixed inset-y-0 left-0 z-10 flex w-14 flex-col border-r bg-background">
+        <div className="flex flex-col items-center gap-4 px-2 py-4">
+          <Logo className="h-9 w-auto flex-none" />
+        </div>
+        <div className="mt-auto flex flex-col items-center gap-4 px-2 py-4">
+          <SignoutButton />
         </div>
       </nav>
       <div className="isolate pl-14">
         <Outlet />
       </div>
-    </div>
+    </>
+  );
+}
+
+function SignoutButton() {
+  const buttonLabel = 'Sign out';
+
+  return (
+    <Form method="post" action="/logout">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            type="submit"
+            variant="ghost"
+            size="icon"
+            className="rounded-lg"
+          >
+            <ExitIcon className="size-5" />
+            <span className="sr-only">{buttonLabel}</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="right">{buttonLabel}</TooltipContent>
+      </Tooltip>
+    </Form>
   );
 }

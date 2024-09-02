@@ -6,6 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react';
+import { TooltipProvider } from './components/ui/tooltip';
 import './tailwind.css';
 import { getUser } from './utils/auth.server';
 
@@ -25,7 +26,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="h-full bg-background font-sans text-foreground antialiased [font-synthesis:none]">
-        {children}
+        <TooltipProvider>{children}</TooltipProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
