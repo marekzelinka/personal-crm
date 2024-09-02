@@ -25,7 +25,7 @@ export async function getUser(request: Request) {
   const user = await prisma.user.findUnique({ where: { id: userId } });
 
   if (!user) {
-    throw await logout(request);
+    throw logout(request);
   }
 
   return user;
@@ -50,7 +50,7 @@ export async function requireUser(request: Request) {
   const user = await prisma.user.findUnique({ where: { id: userId } });
 
   if (!user) {
-    throw await logout(request);
+    throw logout(request);
   }
 
   return user;
@@ -90,7 +90,7 @@ export async function createUser({
 }: Pick<User, 'username' | 'first' | 'last' | 'email'> & { password: string }) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  return await prisma.user.create({
+  return prisma.user.create({
     data: {
       username,
       first,

@@ -1,10 +1,122 @@
-import { Form, Link, useSearchParams } from '@remix-run/react';
+import { getFormProps, getInputProps, useForm } from '@conform-to/react';
+import { getZodConstraint, parseWithZod } from '@conform-to/zod';
+import { json, type ActionFunctionArgs } from '@remix-run/node';
+import { Form, Link, useActionData, useSearchParams } from '@remix-run/react';
+import { z } from 'zod';
+import { ErrorList } from '~/components/forms';
 import { Logo } from '~/components/logo';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
+import { createUser, createUserSession } from '~/utils/auth.server';
+import { prisma } from '~/utils/db.server';
+import { composeSafeRedirectUrl } from '~/utils/misc';
+
+const CreateAccountSchema = z.object({
+  username: z
+    .string({ required_error: 'Username is required' })
+    .min(3, 'Username is too short')
+    .max(20, 'Username is too long')
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      'Username can only include letters, numbers, and underscores',
+    )
+    // Users can type the username in any case, but we store it in lowercase
+    .transform((value) => value.toLowerCase()),
+  first: z
+    .string({ required_error: 'First name is required' })
+    .trim()
+    .min(3, 'First name is too short')
+    .max(40, 'Last name is too long'),
+  last: z
+    .string({ required_error: 'Last name is required' })
+    .trim()
+    .min(3, 'Last name is too short')
+    .max(40, 'Last name is too long'),
+  email: z
+    .string({ required_error: 'Email is required' })
+    .trim()
+    .email('Email is invalid')
+    .min(3, 'Email is too short')
+    // Users can type the email in any case, but we store it in lowercase
+    .transform((arg) => arg.toLowerCase()),
+  password: z
+    .string({ required_error: 'Password is required' })
+    .trim()
+    .min(6, 'Password is too short'),
+});
+
+export async function action({ request }: ActionFunctionArgs) {
+  const url = new URL(request.url);
+  const redirectTo = composeSafeRedirectUrl(url.searchParams.get('redirectTo'));
+
+  const formData = await request.formData();
+  const submission = await parseWithZod(formData, {
+    schema: CreateAccountSchema.superRefine(async (arg, ctx) => {
+      const userWithSameEmail = await prisma.user.findUnique({
+        select: { id: true },
+        where: { email: arg.email },
+      });
+
+      if (userWithSameEmail) {
+        ctx.addIssue({
+          path: ['email'],
+          code: z.ZodIssueCode.custom,
+          message: 'A user already exists with this email',
+        });
+
+        return z.NEVER;
+      }
+
+      const userWithSameUsername = await prisma.user.findUnique({
+        select: { id: true },
+        where: { username: arg.username },
+      });
+
+      if (userWithSameUsername) {
+        ctx.addIssue({
+          path: ['username'],
+          code: z.ZodIssueCode.custom,
+          message: 'A user already exists with this username',
+        });
+
+        return z.NEVER;
+      }
+    }),
+    async: true,
+  });
+
+  if (submission.status !== 'success') {
+    return json(
+      { result: submission.reply({ hideFields: ['password'] }) },
+      { status: submission.status === 'error' ? 400 : 200 },
+    );
+  }
+
+  const { username, first, last, email, password } = submission.value;
+
+  const user = await createUser({ username, first, last, email, password });
+
+  return createUserSession({
+    request,
+    userId: user.id,
+    remember: false,
+    redirectTo,
+  });
+}
 
 export default function Component() {
+  const actionData = useActionData<typeof action>();
+
+  const [form, fields] = useForm({
+    constraint: getZodConstraint(CreateAccountSchema),
+    lastResult: actionData?.result,
+    shouldValidate: 'onBlur',
+    shouldRevalidate: 'onInput',
+    onValidate: ({ formData }) =>
+      parseWithZod(formData, { schema: CreateAccountSchema }),
+  });
+
   const [searchParams] = useSearchParams();
 
   return (
@@ -19,59 +131,70 @@ export default function Component() {
         </div>
       </div>
       <div className="mx-auto mt-6 w-full max-w-[350px]">
-        <Form method="post">
+        <Form method="post" {...getFormProps(form)}>
           <div className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor={fields.username.id}>Username</Label>
               <Input
-                type="text"
-                name="username"
-                id="username"
                 autoComplete="username"
                 placeholder="m_robinson"
+                {...getInputProps(fields.username, { type: 'text' })}
+              />
+              <ErrorList
+                id={fields.username.errorId}
+                errors={fields.username.errors}
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 items-start gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="first">First name</Label>
+                <Label htmlFor={fields.first.id}>First name</Label>
                 <Input
-                  type="text"
-                  name="first"
-                  id="first"
                   autoComplete="given-name"
                   placeholder="Max"
+                  {...getInputProps(fields.first, { type: 'text' })}
+                />
+                <ErrorList
+                  id={fields.first.errorId}
+                  errors={fields.first.errors}
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="last">Last name</Label>
+                <Label htmlFor={fields.last.id}>Last name</Label>
                 <Input
-                  type="text"
-                  name="last"
-                  id="last"
                   autoComplete="family-name"
                   placeholder="Robinson"
+                  {...getInputProps(fields.last, { type: 'text' })}
+                />
+                <ErrorList
+                  id={fields.last.errorId}
+                  errors={fields.last.errors}
                 />
               </div>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor={fields.email.id}>Email</Label>
               <Input
-                type="email"
-                name="email"
-                id="email"
                 autoComplete="email"
                 placeholder="m@example.com"
+                {...getInputProps(fields.email, { type: 'email' })}
+              />
+              <ErrorList
+                id={fields.email.errorId}
+                errors={fields.email.errors}
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor={fields.password.id}>Password</Label>
               <Input
-                type="password"
-                name="password"
-                id="password"
                 autoComplete="new-password"
+                {...getInputProps(fields.password, { type: 'password' })}
+              />
+              <ErrorList
+                id={fields.password.errorId}
+                errors={fields.password.errors}
               />
             </div>
+            <ErrorList id={form.errorId} errors={form.errors} />
             <div>
               <Button type="submit" className="w-full">
                 Create an account
