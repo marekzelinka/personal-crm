@@ -110,8 +110,8 @@ export default function Component() {
                             className={cx(
                               'size-4 flex-none',
                               isActive
-                                ? 'text-muted-foreground'
-                                : 'text-muted group-hover:text-muted-foreground',
+                                ? ''
+                                : 'text-muted-foreground group-hover:text-foreground',
                             )}
                           />
                         </Favorite>
