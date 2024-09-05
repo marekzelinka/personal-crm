@@ -115,7 +115,7 @@ export default function Component() {
             <div className="grid gap-2">
               <Label htmlFor={fields.password.id}>Password</Label>
               <Input
-                autoComplete="new-password"
+                autoComplete="current-password"
                 {...getInputProps(fields.password, { type: 'password' })}
               />
               <ErrorList
