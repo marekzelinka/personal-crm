@@ -1,5 +1,5 @@
 import type { Password, User } from '@prisma/client';
-import { redirect } from '@remix-run/node';
+import { redirect, redirectDocument } from '@remix-run/node';
 import bcrypt from 'bcryptjs';
 import { prisma } from './db.server';
 import { authSessionStorage, getAuthSession } from './session.server';
@@ -129,7 +129,7 @@ export async function verifyLogin(
 export async function logout(request: Request) {
   const session = await getAuthSession(request);
 
-  return redirect('/', {
+  return redirectDocument('/', {
     headers: {
       'Set-Cookie': await authSessionStorage.destroySession(session),
     },
