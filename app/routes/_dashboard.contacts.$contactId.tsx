@@ -26,7 +26,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => [
   {
     title: data?.contact
       ? data.contact.first || data.contact.last
-        ? `${data.contact.first} ${data.contact.last}`
+        ? `${data.contact.first ?? ''} ${data.contact.last ?? ''}`.trim()
         : 'No Name'
       : 'No contact found',
   },
