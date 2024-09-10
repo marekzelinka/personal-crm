@@ -116,7 +116,7 @@ export default function Component() {
           </AvatarFallback>
         </Avatar>
       </div>
-      <div className="ml-5 flex w-full min-w-0 items-center gap-3 pb-1">
+      <div className="ml-5 flex w-full min-w-0 items-center gap-4 pb-1">
         <h1
           className={cx(
             'text-2xl font-semibold tracking-tight',
@@ -135,7 +135,7 @@ export default function Component() {
       </div>
       <div className="ml-6 flex gap-4 pb-1">
         <Form action="edit">
-          <Button type="submit" variant="outline">
+          <Button type="submit" size="sm" variant="outline">
             <Pencil1Icon className="mr-2 size-4" />
             Edit
           </Button>
@@ -153,7 +153,7 @@ export default function Component() {
           }}
         >
           <input type="hidden" name="intent" value="delete" />
-          <Button type="submit" variant="outline">
+          <Button type="submit" size="sm" variant="outline">
             <TrashIcon className="mr-2 size-4" />
             Delete
           </Button>

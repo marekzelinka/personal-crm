@@ -127,11 +127,12 @@ export default function Component() {
             <Label htmlFor={fields.avatar.id} className="pt-3">
               Avatar URL
             </Label>
-            <div className="col-span-2 grid gap-2">
+            <div className="col-span-2">
               <Input {...getInputProps(fields.avatar, { type: 'url' })} />
               <ErrorList
                 id={fields.avatar.errorId}
                 errors={fields.avatar.errors}
+                className="mt-2"
               />
             </div>
           </div>
@@ -139,7 +140,7 @@ export default function Component() {
             <Label htmlFor={fields.first.id} className="pt-3">
               First name
             </Label>
-            <div className="col-span-2 grid gap-2">
+            <div className="col-span-2">
               <Input
                 {...getInputProps(fields.first, { type: 'text' })}
                 className="max-w-xs"
@@ -147,6 +148,7 @@ export default function Component() {
               <ErrorList
                 id={fields.first.errorId}
                 errors={fields.first.errors}
+                className="mt-2"
               />
             </div>
           </div>
@@ -154,21 +156,31 @@ export default function Component() {
             <Label htmlFor={fields.last.id} className="pt-3">
               Last name
             </Label>
-            <div className="col-span-2 grid gap-2">
+            <div className="col-span-2">
               <Input
                 className="max-w-xs"
                 {...getInputProps(fields.last, { type: 'text' })}
               />
-              <ErrorList id={fields.last.errorId} errors={fields.last.errors} />
+              <ErrorList
+                id={fields.last.errorId}
+                errors={fields.last.errors}
+                className="mt-2"
+              />
             </div>
           </div>
         </div>
         <Separator className="my-6" />
         <div className="grid grid-cols-3 items-start gap-3">
-          <div className="col-span-2 col-start-2 grid gap-2">
-            <ErrorList id={form.errorId} errors={form.errors} />
+          <div className="col-span-2 col-start-2">
+            <ErrorList
+              id={form.errorId}
+              errors={form.errors}
+              className="mb-2"
+            />
             <div className="flex items-center gap-3">
-              <Button type="submit">Save</Button>
+              <Button type="submit" size="sm">
+                Save
+              </Button>
               <CancelButton />
             </div>
           </div>
@@ -182,7 +194,12 @@ function CancelButton() {
   const navigate = useNavigate();
 
   return (
-    <Button type="button" variant="ghost" onClick={() => navigate(-1)}>
+    <Button
+      type="button"
+      size="sm"
+      variant="ghost"
+      onClick={() => navigate(-1)}
+    >
       Cancel
     </Button>
   );
