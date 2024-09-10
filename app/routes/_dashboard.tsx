@@ -16,7 +16,7 @@ export default function Component() {
           <Logo className="h-9 w-auto flex-none" />
         </div>
         <div className="mt-auto flex flex-col items-center gap-4 px-2 py-4">
-          <SignoutButton />
+          <LogoutForm />
         </div>
       </nav>
       <div className="isolate pl-14">
@@ -26,8 +26,8 @@ export default function Component() {
   );
 }
 
-function SignoutButton() {
-  const buttonLabel = 'Sign out';
+function LogoutForm() {
+  const label = 'Sign out';
 
   return (
     <Form method="post" action="/logout">
@@ -37,13 +37,13 @@ function SignoutButton() {
             type="submit"
             variant="ghost"
             size="icon"
-            className="rounded-lg"
+            className="text-muted-foreground hover:bg-background hover:text-foreground"
+            aria-label={label}
           >
             <ExitIcon className="size-5" />
-            <span className="sr-only">{buttonLabel}</span>
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="right">{buttonLabel}</TooltipContent>
+        <TooltipContent side="right">{label}</TooltipContent>
       </Tooltip>
     </Form>
   );
