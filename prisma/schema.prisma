@@ -40,6 +40,15 @@ model Contact {
   last     String?
   avatar   String?
   favorite Boolean?
+  bio      String?
+  email    String?
+  phone    String?
+  linkedin String?
+  social   String?
+  website  String?
+  location String?
+  company  String?
+  birthday String?
 
   userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
