@@ -92,12 +92,14 @@ export default function Component() {
                     className={({ isActive, isPending }) =>
                       cx(
                         'group flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
-                        isPending
-                          ? 'text-primary'
-                          : contact.first || contact.last
-                            ? ''
-                            : 'text-muted-foreground',
                         isActive || isPending ? 'bg-muted' : 'hover:bg-muted',
+                        isActive
+                          ? ''
+                          : isPending
+                            ? 'text-primary'
+                            : contact.first || contact.last
+                              ? ''
+                              : 'text-muted-foreground',
                       )
                     }
                   >
