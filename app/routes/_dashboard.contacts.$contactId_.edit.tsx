@@ -21,8 +21,8 @@ import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Separator } from '~/components/ui/separator';
-import { requireUserId } from '~/utils/auth.server';
-import { prisma } from '~/utils/db.server';
+import { requireUserId } from '~/lib/auth.server';
+import { prisma } from '~/lib/db.server';
 
 const EditContactSchema = z.object({
   first: z

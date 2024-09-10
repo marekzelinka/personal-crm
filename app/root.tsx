@@ -7,8 +7,8 @@ import {
   ScrollRestoration,
 } from '@remix-run/react';
 import { TooltipProvider } from './components/ui/tooltip';
+import { getUser } from './lib/auth.server';
 import './tailwind.css';
-import { getUser } from './utils/auth.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request);

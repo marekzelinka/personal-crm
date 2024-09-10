@@ -18,9 +18,9 @@ import { GeneralErrorBoundary } from '~/components/error-boundary';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { Toggle } from '~/components/ui/toggle';
-import { requireUserId } from '~/utils/auth.server';
-import { prisma } from '~/utils/db.server';
-import { cx } from '~/utils/misc';
+import { requireUserId } from '~/lib/auth.server';
+import { prisma } from '~/lib/db.server';
+import { cx } from '~/lib/utils';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => [
   {

@@ -12,9 +12,9 @@ import { Logo } from '~/components/logo';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
-import { createUser, createUserSession } from '~/utils/auth.server';
-import { prisma } from '~/utils/db.server';
-import { composeSafeRedirectUrl } from '~/utils/misc';
+import { createUser, createUserSession } from '~/lib/auth.server';
+import { prisma } from '~/lib/db.server';
+import { composeSafeRedirectUrl } from '~/lib/utils';
 
 const CreateAccountSchema = z.object({
   username: z

@@ -1,4 +1,4 @@
-import { cx } from '~/utils/misc';
+import { cx } from '~/lib/utils';
 
 export type ListOfErrors = Array<string | null | undefined> | null | undefined;
 

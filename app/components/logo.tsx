@@ -1,4 +1,4 @@
-import { cx } from '~/utils/misc';
+import { cx } from '~/lib/utils';
 
 export function Logo({ className }: { className?: string }) {
   return (

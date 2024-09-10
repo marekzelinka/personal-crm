@@ -4,7 +4,7 @@ import {
   type ComponentPropsWithoutRef,
   type ElementRef,
 } from 'react';
-import { cx } from '~/utils/misc';
+import { cx } from '~/lib/utils';
 
 export const Separator = forwardRef<
   ElementRef<typeof SeparatorPrimitive.Root>,

@@ -2,7 +2,7 @@ import type { MetaFunction } from '@remix-run/node';
 import { Link } from '@remix-run/react';
 import { Logo } from '~/components/logo';
 import { buttonVariants } from '~/components/ui/button';
-import { useOptionalUser } from '~/utils/user';
+import { useOptionalUser } from '~/lib/user';
 
 export const meta: MetaFunction = () => [{ title: 'Welcome' }];
 

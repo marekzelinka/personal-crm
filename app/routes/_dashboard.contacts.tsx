@@ -20,9 +20,9 @@ import sortBy from 'sort-by';
 import { LoadingOverlay } from '~/components/loading-overlay';
 import { SearchBar } from '~/components/search-bar';
 import { Button } from '~/components/ui/button';
-import { requireUserId } from '~/utils/auth.server';
-import { prisma } from '~/utils/db.server';
-import { cx } from '~/utils/misc';
+import { requireUserId } from '~/lib/auth.server';
+import { prisma } from '~/lib/db.server';
+import { cx } from '~/lib/utils';
 
 export const meta: MetaFunction = () => [{ title: 'Contacts' }];
 

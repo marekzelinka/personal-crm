@@ -1,6 +1,6 @@
 import { json, redirect, type LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
-import { getUserId } from '~/utils/auth.server';
+import { getUserId } from '~/lib/auth.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await getUserId(request);
