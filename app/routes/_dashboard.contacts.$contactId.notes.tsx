@@ -61,11 +61,11 @@ export default function Component() {
   const actionData = useActionData<typeof action>();
   return (
     <Card>
-      <CardHeader className="gap-2">
-        <CardTitle>Create a new note</CardTitle>
-        <NoteForm lastResult={actionData?.result} />
+      <CardHeader>
+        <CardTitle>Notes</CardTitle>
       </CardHeader>
-      <CardContent className="text-sm">
+      <CardContent className="grid gap-6">
+        <NoteForm lastResult={actionData?.result} />
         <NoteList />
       </CardContent>
     </Card>
@@ -94,7 +94,7 @@ function NoteList() {
           >
             {format(note.date, 'PPpp')}
           </time>
-          <p>{note.text}</p>
+          <p className="whitespace-pre-wrap text-sm">{note.text}</p>
         </li>
       ))}
     </ul>

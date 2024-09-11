@@ -49,7 +49,7 @@ export function NoteForm({
         <div className="overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring">
           <Textarea
             className="resize-none border-0 p-3 shadow-none focus-visible:ring-0"
-            placeholder="Type your message here..."
+            placeholder={`What would you like to add? (Press "r" to focus)`}
             aria-label="Note"
             {...getTextareaProps(fields.text)}
           />
