@@ -179,8 +179,6 @@ export default function Component() {
 
   const actionData = useActionData<typeof action>();
 
-  console.log(contact);
-
   const [form, fields] = useForm({
     defaultValue: {
       ...contact,
