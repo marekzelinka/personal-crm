@@ -21,7 +21,7 @@ export const CardHeader = forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cx('flex flex-col space-y-1.5 p-6', className)}
+    className={cx('flex flex-col gap-1.5 p-6', className)}
     {...props}
   />
 ));

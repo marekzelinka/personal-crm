@@ -182,6 +182,7 @@ export default function Component() {
             <NavLink
               key={tab.name}
               to={tab.to}
+              end={tab.to === '.'}
               preventScrollReset
               className={({ isActive }) =>
                 cx(
