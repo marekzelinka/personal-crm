@@ -18,8 +18,8 @@ export default function Component() {
             Supercharge your relationships
           </h1>
           <p className="mt-4 text-pretty text-lg text-muted-foreground">
-            Finally, manage all your personal and professional relationships.
-            Move beyond the CRM—keep in touch with your network.
+            Keep in touch with your personal and professional relationships.
+            Move beyond the CRM&mdash;impress with thoughtfulness.
           </p>
         </div>
         <div className="mt-6 flex justify-center gap-3">
