@@ -65,7 +65,7 @@ export default function Component() {
       <CardHeader>
         <CardTitle>Notes</CardTitle>
       </CardHeader>
-      <CardContent className="grid gap-6">
+      <CardContent className="grid gap-8">
         <NoteForm lastResult={actionData?.result} />
         <NoteList />
       </CardContent>
