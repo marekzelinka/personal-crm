@@ -49,6 +49,7 @@ model Contact {
   location String?
   company  String?
   birthday String?
+  notes    Note[]
 
   userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -57,4 +58,18 @@ model Contact {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("contact")
+}
+
+model Note {
+  id   String   @id @default(uuid()) @map("note_id")
+  text String
+  date DateTime
+
+  contactId String  @map("contact_id")
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("note")
 }
