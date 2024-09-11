@@ -17,5 +17,5 @@ export const authSessionStorage = createCookieSessionStorage({
 export async function getAuthSession(request: Request) {
   const cookie = request.headers.get('Cookie');
 
-  return authSessionStorage.getSession(cookie);
+  return await authSessionStorage.getSession(cookie);
 }
