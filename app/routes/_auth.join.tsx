@@ -13,7 +13,7 @@ import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { createUser, createUserSession } from '~/lib/auth.server';
-import { prisma } from '~/lib/db.server';
+import { db } from '~/lib/db.server';
 import { composeSafeRedirectUrl } from '~/lib/utils';
 
 const CreateAccountSchema = z.object({
@@ -59,7 +59,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const submission = await parseWithZod(formData, {
     schema: CreateAccountSchema.superRefine(async (arg, ctx) => {
-      const userWithSameEmail = await prisma.user.findUnique({
+      const userWithSameEmail = await db.user.findUnique({
         select: { id: true },
         where: { email: arg.email },
       });
@@ -74,7 +74,7 @@ export async function action({ request }: ActionFunctionArgs) {
         return z.NEVER;
       }
 
-      const userWithSameUsername = await prisma.user.findUnique({
+      const userWithSameUsername = await db.user.findUnique({
         select: { id: true },
         where: { username: arg.username },
       });

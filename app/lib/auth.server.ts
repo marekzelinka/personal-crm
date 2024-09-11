@@ -1,7 +1,7 @@
 import type { Password, User } from '@prisma/client';
 import { redirect, redirectDocument } from '@remix-run/node';
 import bcrypt from 'bcryptjs';
-import { prisma } from './db.server';
+import { db } from './db.server';
 import { authSessionStorage, getAuthSession } from './session.server';
 
 const USER_SESSION_KEY = 'userId';
@@ -22,7 +22,7 @@ export async function getUser(request: Request) {
     return null;
   }
 
-  const user = await prisma.user.findUnique({ where: { id: userId } });
+  const user = await db.user.findUnique({ where: { id: userId } });
 
   if (!user) {
     throw logout(request);
@@ -47,7 +47,7 @@ export async function requireUserId(
 
 export async function requireUser(request: Request) {
   const userId = await requireUserId(request);
-  const user = await prisma.user.findUnique({ where: { id: userId } });
+  const user = await db.user.findUnique({ where: { id: userId } });
 
   if (!user) {
     throw logout(request);
@@ -105,7 +105,7 @@ export async function verifyLogin(
   email: User['email'],
   password: Password['hash'],
 ) {
-  const userWithPassword = await prisma.user.findUnique({
+  const userWithPassword = await db.user.findUnique({
     include: { password: true },
     where: { email },
   });

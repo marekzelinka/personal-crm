@@ -26,7 +26,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { Toggle } from '~/components/ui/toggle';
 import { requireUserId } from '~/lib/auth.server';
-import { prisma } from '~/lib/db.server';
+import { db } from '~/lib/db.server';
 import { cx } from '~/lib/utils';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => [
@@ -43,7 +43,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const userId = await requireUserId(request);
 
   invariant(params.contactId, 'Missing contactId param');
-  const contact = await prisma.contact.findUnique({
+  const contact = await db.contact.findUnique({
     select: { id: true, first: true, last: true, avatar: true, favorite: true },
     where: { id: params.contactId, userId },
   });
@@ -60,7 +60,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const userId = await requireUserId(request);
 
   invariant(params.contactId, 'Missing contactId param');
-  const contact = await prisma.contact.findUnique({
+  const contact = await db.contact.findUnique({
     select: { id: true },
     where: { id: params.contactId, userId },
   });
@@ -75,7 +75,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   if (formData.get('intent') === 'favorite') {
     const favorite = formData.get('favorite');
 
-    await prisma.contact.update({
+    await db.contact.update({
       select: { id: true },
       data: { favorite: favorite === 'true' },
       where: { id: params.contactId, userId },
@@ -85,7 +85,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   if (formData.get('intent') === 'delete') {
-    await prisma.contact.delete({
+    await db.contact.delete({
       select: { id: true },
       where: { id: params.contactId, userId },
     });
@@ -222,7 +222,7 @@ function Favorite({ contact }: { contact: Pick<Contact, 'id' | 'favorite'> }) {
       <Toggle
         type="submit"
         size="sm"
-        variant="outline"
+        variant="ghost"
         pressed={favorite}
         aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
       >

@@ -4,13 +4,13 @@ import { Link, useLoaderData } from '@remix-run/react';
 import { format, formatDistanceStrict } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { requireUserId } from '~/lib/auth.server';
-import { prisma } from '~/lib/db.server';
+import { db } from '~/lib/db.server';
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const userId = await requireUserId(request);
 
   invariant(params.contactId, 'Missing contactId param');
-  const contact = await prisma.contact.findUnique({
+  const contact = await db.contact.findUnique({
     select: {
       bio: true,
       email: true,

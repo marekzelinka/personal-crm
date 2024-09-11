@@ -29,7 +29,7 @@ import { Label } from '~/components/ui/label';
 import { Separator } from '~/components/ui/separator';
 import { Textarea } from '~/components/ui/textarea';
 import { requireUserId } from '~/lib/auth.server';
-import { prisma } from '~/lib/db.server';
+import { db } from '~/lib/db.server';
 
 const EditContactSchema = z.object({
   first: z
@@ -110,7 +110,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const userId = await requireUserId(request);
 
   invariant(params.contactId, 'Missing contactId param');
-  const contact = await prisma.contact.findUnique({
+  const contact = await db.contact.findUnique({
     select: {
       first: true,
       last: true,
@@ -140,7 +140,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const userId = await requireUserId(request);
 
   invariant(params.contactId, 'Missing contactId param');
-  const contact = await prisma.contact.findUnique({
+  const contact = await db.contact.findUnique({
     select: { id: true },
     where: { id: params.contactId, userId },
   });
@@ -161,7 +161,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   const updates = submission.value;
-  await prisma.contact.update({
+  await db.contact.update({
     select: { id: true },
     data: updates,
     where: { id: params.contactId, userId },

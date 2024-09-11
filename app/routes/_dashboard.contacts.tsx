@@ -21,7 +21,7 @@ import { LoadingOverlay } from '~/components/loading-overlay';
 import { SearchBar } from '~/components/search-bar';
 import { Button } from '~/components/ui/button';
 import { requireUserId } from '~/lib/auth.server';
-import { prisma } from '~/lib/db.server';
+import { db } from '~/lib/db.server';
 import { cx } from '~/lib/utils';
 
 export const meta: MetaFunction = () => [{ title: 'Contacts' }];
@@ -32,7 +32,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const q = url.searchParams.get('q');
 
-  let contacts = await prisma.contact.findMany({
+  let contacts = await db.contact.findMany({
     select: { id: true, first: true, last: true, avatar: true, favorite: true },
     where: { userId },
   });
@@ -49,7 +49,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const userId = await requireUserId(request);
 
-  const contact = await prisma.contact.create({
+  const contact = await db.contact.create({
     select: { id: true },
     data: { user: { connect: { id: userId } } },
   });
