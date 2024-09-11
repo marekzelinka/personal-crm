@@ -19,6 +19,7 @@ import {
   Outlet,
   useFetcher,
   useLoaderData,
+  type NavLinkProps,
 } from '@remix-run/react';
 import { GeneralErrorBoundary } from '~/components/error-boundary';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
@@ -102,6 +103,11 @@ export function ErrorBoundary() {
   return <GeneralErrorBoundary />;
 }
 
+const tabs: { name: string; to: NavLinkProps['to'] }[] = [
+  { name: 'Profile', to: '.' },
+  { name: 'Notes', to: 'notes' },
+];
+
 export default function Component() {
   const { contact } = useLoaderData<typeof loader>();
 
@@ -169,31 +175,26 @@ export default function Component() {
       </div>
       <div className="mt-6">
         <nav
-          className="inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground"
+          className="inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1"
           aria-label="Tabs"
         >
-          <NavLink
-            to="."
-            className={({ isActive }) =>
-              cx(
-                'inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-                isActive ? 'bg-background text-foreground shadow' : '',
-              )
-            }
-          >
-            Profile
-          </NavLink>
-          <NavLink
-            to="notes"
-            className={({ isActive }) =>
-              cx(
-                'inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-                isActive ? 'bg-background text-foreground shadow' : '',
-              )
-            }
-          >
-            Notes
-          </NavLink>
+          {tabs.map((tab) => (
+            <NavLink
+              key={tab.name}
+              to={tab.to}
+              preventScrollReset
+              className={({ isActive }) =>
+                cx(
+                  'inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+                  isActive
+                    ? 'bg-background text-foreground shadow'
+                    : 'text-muted-foreground hover:text-foreground',
+                )
+              }
+            >
+              {tab.name}
+            </NavLink>
+          ))}
         </nav>
         <div className="mt-2">
           <Outlet />
