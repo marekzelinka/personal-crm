@@ -20,17 +20,15 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
 export default function Component() {
   return (
-    <>
-      <Card className="mt-6">
-        <CardHeader className="gap-2">
-          <CardTitle>Create a new note</CardTitle>
-          <NoteForm />
-        </CardHeader>
-        <CardContent className="text-sm">
-          <NoteList />
-        </CardContent>
-      </Card>
-    </>
+    <Card>
+      <CardHeader className="gap-2">
+        <CardTitle>Create a new note</CardTitle>
+        <NoteForm />
+      </CardHeader>
+      <CardContent className="text-sm">
+        <NoteList />
+      </CardContent>
+    </Card>
   );
 }
 
