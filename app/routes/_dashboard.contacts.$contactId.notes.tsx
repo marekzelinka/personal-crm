@@ -6,7 +6,7 @@ import {
   type LoaderFunctionArgs,
 } from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
-import { format } from 'date-fns';
+import { format, isToday, isYesterday } from 'date-fns';
 import { EmptyState } from '~/components/empty-state';
 import { NoteForm, NoteFormSchema } from '~/components/note-form';
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
@@ -59,6 +59,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 export default function Component() {
   const actionData = useActionData<typeof action>();
+
   return (
     <Card>
       <CardHeader>
@@ -88,13 +89,14 @@ function NoteList() {
     <ul className="grid gap-8">
       {notes.map((note) => (
         <li key={note.id} className="grid gap-1">
-          <time
-            dateTime={note.date}
-            className="block text-xs text-muted-foreground"
-          >
-            {format(note.date, 'PPpp')}
-          </time>
-          <p className="whitespace-pre-wrap text-sm">{note.text}</p>
+          <div className="block text-xs text-muted-foreground">
+            {isToday(note.date)
+              ? 'today'
+              : isYesterday(note.date)
+                ? 'yesterday'
+                : format(note.date, 'PP')}
+          </div>
+          <div className="whitespace-pre-wrap text-sm">{note.text}</div>
         </li>
       ))}
     </ul>
