@@ -19,6 +19,7 @@ import { composeSafeRedirectUrl } from '~/lib/utils';
 const CreateAccountSchema = z.object({
   username: z
     .string({ required_error: 'Username is required' })
+    .trim()
     .min(3, 'Username is too short')
     .max(20, 'Username is too long')
     .regex(
