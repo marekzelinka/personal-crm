@@ -49,7 +49,7 @@ export function NoteForm({
         <div className="overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring">
           <Textarea
             className="resize-none border-0 p-3 shadow-none focus-visible:ring-0"
-            placeholder={`What would you like to add? (Press "r" to focus)`}
+            placeholder="What would you like to add?"
             aria-label="Note"
             {...getTextareaProps(fields.text)}
           />
@@ -60,6 +60,7 @@ export function NoteForm({
           <div className="flex items-center px-3 pb-3">
             <Input
               className="max-w-fit"
+              aria-label="Date"
               {...getInputProps(fields.date, { type: 'date' })}
             />
             <Button type="submit" size="sm" className="ml-auto">
