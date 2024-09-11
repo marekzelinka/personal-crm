@@ -129,7 +129,7 @@ export default function Component() {
             </AvatarFallback>
           </Avatar>
         </div>
-        <div className="ml-5 flex w-full min-w-0 items-center gap-4 pb-1">
+        <div className="ml-5 flex w-full min-w-0 items-center gap-3 pb-1">
           <h1
             className={cx(
               'text-2xl font-semibold tracking-tight',
@@ -222,7 +222,7 @@ function Favorite({ contact }: { contact: Pick<Contact, 'id' | 'favorite'> }) {
       <Toggle
         type="submit"
         size="sm"
-        variant="ghost"
+        variant="outline"
         pressed={favorite}
         aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
       >

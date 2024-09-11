@@ -5,11 +5,11 @@ export default function Component() {
   return (
     <>
       <Card className="mt-6">
-        <CardHeader className="gap-2 bg-muted/50">
+        <CardHeader className="gap-2">
           <CardTitle>Create a new note</CardTitle>
           <NoteForm />
         </CardHeader>
-        <CardContent className="pt-6 text-sm">
+        <CardContent className="text-sm">
           <ul className="grid gap-8">
             <li className="grid gap-1">
               <time className="block text-xs text-muted-foreground">
