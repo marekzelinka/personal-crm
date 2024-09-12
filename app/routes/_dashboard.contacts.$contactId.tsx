@@ -143,9 +143,9 @@ export default function Component() {
               <AvatarImage src={contact.avatar ?? undefined} alt="" />
               <AvatarFallback>
                 <svg
-                  className="h-full w-full text-primary-foreground"
-                  fill="currentColor"
                   viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="h-full w-full text-primary-foreground"
                   aria-hidden
                 >
                   <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -173,7 +173,7 @@ export default function Component() {
           <div className="ml-6 flex gap-4 pb-1">
             <Form action="edit">
               <Button type="submit" size="sm" variant="outline">
-                <Pencil1Icon className="mr-2 size-4" />
+                <Pencil1Icon className="mr-2" aria-hidden />
                 Edit
               </Button>
             </Form>
@@ -191,7 +191,7 @@ export default function Component() {
             >
               <input type="hidden" name="intent" value="delete" />
               <Button type="submit" size="sm" variant="outline">
-                <TrashIcon className="mr-2 size-4" />
+                <TrashIcon className="mr-2" aria-hidden />
                 Delete
               </Button>
             </Form>
@@ -252,11 +252,7 @@ function Favorite({ contact }: { contact: Pick<Contact, 'id' | 'favorite'> }) {
         pressed={favorite}
         aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
       >
-        {favorite ? (
-          <StarFilledIcon className="size-4" />
-        ) : (
-          <StarIcon className="size-4" />
-        )}
+        {favorite ? <StarFilledIcon aria-hidden /> : <StarIcon aria-hidden />}
       </Toggle>
     </fetcher.Form>
   );

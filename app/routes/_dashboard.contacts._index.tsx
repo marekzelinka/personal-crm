@@ -12,7 +12,7 @@ export default function Component() {
       >
         <Form method="post" action="/contacts">
           <Button type="submit" variant="secondary">
-            <PlusIcon className="mr-2 size-4" />
+            <PlusIcon className="mr-2" aria-hidden />
             New contact
           </Button>
         </Form>

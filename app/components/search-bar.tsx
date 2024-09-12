@@ -45,9 +45,15 @@ export function SearchBar() {
           aria-hidden
         >
           {shouldShowSpinner ? (
-            <UpdateIcon className="size-4 animate-spin text-muted-foreground" />
+            <UpdateIcon
+              className="animate-spin text-muted-foreground"
+              aria-hidden
+            />
           ) : (
-            <MagnifyingGlassIcon className="size-4 text-muted-foreground" />
+            <MagnifyingGlassIcon
+              className="text-muted-foreground"
+              aria-hidden
+            />
           )}
         </div>
         <Input

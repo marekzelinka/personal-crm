@@ -54,7 +54,7 @@ export default function Component() {
           >
             <Form action="edit">
               <Button type="submit" size="sm">
-                <Pencil1Icon className="mr-2 size-4" />
+                <Pencil1Icon className="mr-2" aria-hidden />
                 Edit details
               </Button>
             </Form>

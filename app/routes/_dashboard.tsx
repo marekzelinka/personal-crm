@@ -40,7 +40,7 @@ function LogoutForm() {
             className="text-muted-foreground hover:bg-background hover:text-foreground"
             aria-label={label}
           >
-            <ExitIcon className="size-5" />
+            <ExitIcon className="size-5" aria-hidden />
           </Button>
         </TooltipTrigger>
         <TooltipContent side="right">{label}</TooltipContent>

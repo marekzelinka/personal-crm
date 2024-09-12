@@ -74,7 +74,7 @@ export default function Component() {
           </search>
           <Form method="POST">
             <Button type="submit" aria-label="New contact">
-              <PlusIcon className="mr-2 size-4" />
+              <PlusIcon className="mr-2" aria-hidden />
               New
             </Button>
           </Form>
@@ -115,11 +115,12 @@ export default function Component() {
                         <Favorite contact={contact}>
                           <StarFilledIcon
                             className={cx(
-                              'size-4 flex-none',
+                              'flex-none',
                               isActive
                                 ? ''
                                 : 'text-muted-foreground group-hover:text-foreground',
                             )}
+                            aria-hidden
                           />
                         </Favorite>
                       </>
