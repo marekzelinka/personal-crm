@@ -45,7 +45,7 @@ export function NoteForm({
 
   return (
     <Form method="POST" {...getFormProps(form)}>
-      <div className="relative">
+      <fieldset className="relative" aria-label="Create a new note">
         <div className="overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring">
           <Textarea
             className="resize-none border-0 p-3 shadow-none focus-visible:ring-0"
@@ -68,7 +68,7 @@ export function NoteForm({
             </Button>
           </div>
         </div>
-      </div>
+      </fieldset>
       <ErrorList
         id={fields.text.errorId}
         errors={fields.text.errors}
