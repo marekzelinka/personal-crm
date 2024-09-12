@@ -131,8 +131,9 @@ export default function Component() {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to=".." aria-label="Contacts">
+                <Link to=".." className="inline-flex items-center gap-1.5">
                   <ChevronLeftIcon aria-hidden />
+                  <span className="text-foreground">Contacts</span>
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
