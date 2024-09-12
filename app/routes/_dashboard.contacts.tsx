@@ -91,55 +91,61 @@ export default function Component() {
           </Form>
         </div>
         <ScrollArea className="flex-1">
-          <div className="p-4 pt-0">
-            {contacts.map((contact) => (
-              <NavLink
-                key={contact.id}
-                to={contact.id}
-                prefetch="intent"
-                className={({ isActive, isPending }) =>
-                  cx(
-                    'group flex items-center gap-2 rounded-md p-2 text-sm transition-colors',
-                    isActive || isPending ? 'bg-primary' : 'hover:bg-muted',
-                    isActive
-                      ? contact.first || contact.last
-                        ? 'text-primary-foreground'
-                        : 'text-primary-foreground/70'
-                      : isPending
-                        ? 'text-primary'
-                        : contact.first || contact.last
-                          ? ''
-                          : 'text-muted-foreground',
-                  )
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <span className="flex-auto truncate">
-                      {contact.first || contact.last ? (
-                        <>
-                          {contact.first} {contact.last}
-                        </>
-                      ) : (
-                        'No Name'
-                      )}
-                    </span>
-                    <Favorite contact={contact}>
-                      <StarFilledIcon
-                        className={cx(
-                          'flex-none',
-                          isActive
+          {contacts.length ? (
+            <div className="p-4 pt-0">
+              {contacts.map((contact) => (
+                <NavLink
+                  key={contact.id}
+                  to={contact.id}
+                  prefetch="intent"
+                  className={({ isActive, isPending }) =>
+                    cx(
+                      'group flex items-center gap-2 rounded-md p-2 text-sm transition-colors',
+                      isActive || isPending ? 'bg-primary' : 'hover:bg-muted',
+                      isActive
+                        ? contact.first || contact.last
+                          ? 'text-primary-foreground'
+                          : 'text-primary-foreground/70'
+                        : isPending
+                          ? 'text-primary'
+                          : contact.first || contact.last
                             ? ''
-                            : 'text-muted-foreground group-hover:text-foreground',
+                            : 'text-muted-foreground',
+                    )
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <span className="flex-auto truncate">
+                        {contact.first || contact.last ? (
+                          <>
+                            {contact.first} {contact.last}
+                          </>
+                        ) : (
+                          'No Name'
                         )}
-                        aria-hidden
-                      />
-                    </Favorite>
-                  </>
-                )}
-              </NavLink>
-            ))}
-          </div>
+                      </span>
+                      <Favorite contact={contact}>
+                        <StarFilledIcon
+                          className={cx(
+                            'flex-none',
+                            isActive
+                              ? ''
+                              : 'text-muted-foreground group-hover:text-foreground',
+                          )}
+                          aria-hidden
+                        />
+                      </Favorite>
+                    </>
+                  )}
+                </NavLink>
+              ))}
+            </div>
+          ) : (
+            <div className="p-4 pt-0">
+              <p className="text-sm text-muted-foreground">No contacts found</p>
+            </div>
+          )}
         </ScrollArea>
       </aside>
     </>
