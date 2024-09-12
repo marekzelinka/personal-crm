@@ -74,9 +74,9 @@ export default function Component() {
   return (
     <>
       <main className="pl-96">
-        <LoadingOverlay>
+        <ContactLoadingOverlay>
           <Outlet />
-        </LoadingOverlay>
+        </ContactLoadingOverlay>
       </main>
       <aside className="fixed inset-y-0 flex w-96 flex-col border-r">
         <div className="flex gap-4 bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -101,7 +101,11 @@ export default function Component() {
                   className={({ isActive, isPending }) =>
                     cx(
                       'group flex items-center gap-2 rounded-md p-2 text-sm transition-colors',
-                      isActive || isPending ? 'bg-primary' : 'hover:bg-muted',
+                      isActive
+                        ? 'bg-primary'
+                        : isPending
+                          ? 'bg-muted'
+                          : 'hover:bg-muted',
                       isActive
                         ? contact.first || contact.last
                           ? 'text-primary-foreground'
@@ -114,7 +118,7 @@ export default function Component() {
                     )
                   }
                 >
-                  {({ isActive }) => (
+                  {({ isActive, isPending }) => (
                     <>
                       <span className="flex-auto truncate">
                         {contact.first || contact.last ? (
@@ -131,7 +135,9 @@ export default function Component() {
                             'flex-none',
                             isActive
                               ? ''
-                              : 'text-muted-foreground group-hover:text-foreground',
+                              : isPending
+                                ? 'text-foreground'
+                                : 'text-muted-foreground group-hover:text-foreground',
                           )}
                           aria-hidden
                         />
@@ -152,7 +158,7 @@ export default function Component() {
   );
 }
 
-function LoadingOverlay({ children }: PropsWithChildren) {
+function ContactLoadingOverlay({ children }: PropsWithChildren) {
   const navigation = useNavigation();
   const isLoading = navigation.state === 'loading';
   const isSearching = new URLSearchParams(navigation.location?.search).has('q');
@@ -261,11 +267,11 @@ function Favorite({
   contact: Pick<Contact, 'id' | 'favorite'>;
 }>) {
   const fetcher = useFetcher({ key: `contact:${contact.id}` });
-  const favorite = fetcher.formData
+  const isFavorite = fetcher.formData
     ? fetcher.formData.get('favorite') === 'true'
     : Boolean(contact.favorite);
 
-  if (!favorite) {
+  if (!isFavorite) {
     return null;
   }
 
