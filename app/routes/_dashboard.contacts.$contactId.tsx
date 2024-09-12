@@ -109,7 +109,11 @@ export async function action({ request, params }: ActionFunctionArgs) {
 }
 
 export function ErrorBoundary() {
-  return <GeneralErrorBoundary />;
+  return (
+    <div className="mx-auto max-w-3xl p-6">
+      <GeneralErrorBoundary />
+    </div>
+  );
 }
 
 const tabs: { name: string; to: NavLinkProps['to'] }[] = [

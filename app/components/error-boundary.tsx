@@ -9,8 +9,8 @@ export function GeneralErrorBoundary() {
 
   return (
     <div className="flex flex-col items-center gap-1 text-center">
-      <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-destructive-foreground">
-        <ExclamationTriangleIcon className="size-6 text-destructive" />
+      <div className="mx-auto flex size-10 items-center justify-center rounded-full bg-destructive">
+        <ExclamationTriangleIcon className="size-5 text-destructive-foreground" />
       </div>
       <h3 className="mt-3 text-2xl font-bold tracking-tight">
         Oops! An error occurred…
