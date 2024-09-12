@@ -63,11 +63,9 @@ export default function Component() {
   return (
     <>
       <main className="pl-96">
-        <div className="mx-auto max-w-3xl p-6">
-          <LoadingOverlay>
-            <Outlet />
-          </LoadingOverlay>
-        </div>
+        <LoadingOverlay>
+          <Outlet />
+        </LoadingOverlay>
       </main>
       <aside className="fixed inset-y-0 flex w-96 flex-col border-r">
         <div className="sticky top-0 z-40 flex w-full gap-4 border-b border-border bg-background/90 p-4 backdrop-blur-sm">

@@ -6,6 +6,7 @@ import {
 } from '@conform-to/react';
 import { getZodConstraint, parseWithZod } from '@conform-to/zod';
 import { invariant, invariantResponse } from '@epic-web/invariant';
+import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import {
   json,
   type ActionFunctionArgs,
@@ -14,6 +15,7 @@ import {
 } from '@remix-run/node';
 import {
   Form,
+  Link,
   redirect,
   useActionData,
   useLoaderData,
@@ -23,6 +25,12 @@ import { format } from 'date-fns';
 import { z } from 'zod';
 import { GeneralErrorBoundary } from '~/components/error-boundary';
 import { ErrorList } from '~/components/forms';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+} from '~/components/ui/breadcrumb';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
@@ -112,6 +120,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   invariant(params.contactId, 'Missing contactId param');
   const contact = await db.contact.findUnique({
     select: {
+      id: true,
       first: true,
       last: true,
       avatar: true,
@@ -197,219 +206,250 @@ export default function Component() {
 
   return (
     <>
-      <h1 className="sr-only">Edit Contact</h1>
-      <Form method="POST" {...getFormProps(form)}>
-        <div className="grid gap-4">
-          <div className="grid grid-cols-3 items-start gap-4">
-            <Label htmlFor={fields.avatar.id} className="pt-3">
-              Avatar URL
-            </Label>
-            <div className="col-span-2">
-              <Input {...getInputProps(fields.avatar, { type: 'url' })} />
-              <ErrorList
-                id={fields.avatar.errorId}
-                errors={fields.avatar.errors}
-                className="mt-2"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-3 items-start gap-4">
-            <Label htmlFor={fields.first.id} className="pt-3">
-              First name
-            </Label>
-            <div className="col-span-2">
-              <Input
-                {...getInputProps(fields.first, { type: 'text' })}
-                className="max-w-xs"
-              />
-              <ErrorList
-                id={fields.first.errorId}
-                errors={fields.first.errors}
-                className="mt-2"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-3 items-start gap-4">
-            <Label htmlFor={fields.last.id} className="pt-3">
-              Last name
-            </Label>
-            <div className="col-span-2">
-              <Input
-                className="max-w-xs"
-                {...getInputProps(fields.last, { type: 'text' })}
-              />
-              <ErrorList
-                id={fields.last.errorId}
-                errors={fields.last.errors}
-                className="mt-2"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-3 items-start gap-4">
-            <Label htmlFor={fields.bio.id} className="pt-3">
-              Bio
-            </Label>
-            <div className="col-span-2">
-              <Textarea rows={4} {...getTextareaProps(fields.bio)} />
-              <ErrorList
-                id={fields.bio.errorId}
-                errors={fields.bio.errors}
-                className="mt-2"
-              />
-            </div>
-          </div>
+      <Breadcrumb>
+        <div className="mx-auto flex h-10 max-w-3xl items-center px-6">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link
+                  to={`../${contact.id}`}
+                  relative="route"
+                  className="inline-flex items-center gap-1.5"
+                  aria-label="Go back"
+                >
+                  <ChevronLeftIcon aria-hidden />
+                  <span className="text-foreground">
+                    Editing{' '}
+                    {contact.first || contact.last ? (
+                      <>
+                        {contact.first} {contact.last}
+                      </>
+                    ) : (
+                      'No Name'
+                    )}
+                  </span>
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
         </div>
-        <Separator className="my-6" />
-        <div className="grid gap-4">
-          <div className="grid grid-cols-3 items-start gap-4">
-            <Label htmlFor={fields.email.id} className="pt-3">
-              Email
-            </Label>
-            <div className="col-span-2">
-              <Input
-                {...getInputProps(fields.email, { type: 'email' })}
-                className="max-w-xs"
-              />
+      </Breadcrumb>
+      <Separator />
+      <div className="mx-auto max-w-3xl p-6">
+        <h1 className="sr-only">Edit Contact</h1>
+        <Form method="POST" {...getFormProps(form)}>
+          <div className="grid gap-4">
+            <div className="grid grid-cols-3 items-start gap-4">
+              <Label htmlFor={fields.avatar.id} className="pt-3">
+                Avatar URL
+              </Label>
+              <div className="col-span-2">
+                <Input {...getInputProps(fields.avatar, { type: 'url' })} />
+                <ErrorList
+                  id={fields.avatar.errorId}
+                  errors={fields.avatar.errors}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 items-start gap-4">
+              <Label htmlFor={fields.first.id} className="pt-3">
+                First name
+              </Label>
+              <div className="col-span-2">
+                <Input
+                  {...getInputProps(fields.first, { type: 'text' })}
+                  className="max-w-xs"
+                />
+                <ErrorList
+                  id={fields.first.errorId}
+                  errors={fields.first.errors}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 items-start gap-4">
+              <Label htmlFor={fields.last.id} className="pt-3">
+                Last name
+              </Label>
+              <div className="col-span-2">
+                <Input
+                  className="max-w-xs"
+                  {...getInputProps(fields.last, { type: 'text' })}
+                />
+                <ErrorList
+                  id={fields.last.errorId}
+                  errors={fields.last.errors}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 items-start gap-4">
+              <Label htmlFor={fields.bio.id} className="pt-3">
+                Bio
+              </Label>
+              <div className="col-span-2">
+                <Textarea rows={4} {...getTextareaProps(fields.bio)} />
+                <ErrorList
+                  id={fields.bio.errorId}
+                  errors={fields.bio.errors}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+          </div>
+          <Separator className="my-6" />
+          <div className="grid gap-4">
+            <div className="grid grid-cols-3 items-start gap-4">
+              <Label htmlFor={fields.email.id} className="pt-3">
+                Email
+              </Label>
+              <div className="col-span-2">
+                <Input
+                  {...getInputProps(fields.email, { type: 'email' })}
+                  className="max-w-xs"
+                />
+                <ErrorList
+                  id={fields.email.errorId}
+                  errors={fields.email.errors}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 items-start gap-4">
+              <Label htmlFor={fields.phone.id} className="pt-3">
+                Phone
+              </Label>
+              <div className="col-span-2">
+                <Input
+                  className="max-w-xs"
+                  {...getInputProps(fields.phone, { type: 'tel' })}
+                />
+                <ErrorList
+                  id={fields.phone.errorId}
+                  errors={fields.phone.errors}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 items-start gap-4">
+              <Label htmlFor={fields.linkedin.id} className="pt-3">
+                LinkedIn
+              </Label>
+              <div className="col-span-2">
+                <Input
+                  className="max-w-xs"
+                  {...getInputProps(fields.linkedin, { type: 'url' })}
+                />
+                <ErrorList
+                  id={fields.linkedin.errorId}
+                  errors={fields.linkedin.errors}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 items-start gap-4">
+              <Label htmlFor={fields.social.id} className="pt-3">
+                Social URL
+              </Label>
+              <div className="col-span-2">
+                <Input
+                  className="max-w-xs"
+                  {...getInputProps(fields.social, { type: 'url' })}
+                />
+                <ErrorList
+                  id={fields.social.errorId}
+                  errors={fields.social.errors}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 items-start gap-4">
+              <Label htmlFor={fields.website.id} className="pt-3">
+                Website URL
+              </Label>
+              <div className="col-span-2">
+                <Input
+                  className="max-w-xs"
+                  {...getInputProps(fields.website, { type: 'url' })}
+                />
+                <ErrorList
+                  id={fields.website.errorId}
+                  errors={fields.website.errors}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+          </div>
+          <Separator className="my-6" />
+          <div className="grid gap-4">
+            <div className="grid grid-cols-3 items-start gap-4">
+              <Label htmlFor={fields.location.id} className="pt-3">
+                Location
+              </Label>
+              <div className="col-span-2">
+                <Input
+                  className="max-w-sm"
+                  {...getInputProps(fields.location, { type: 'text' })}
+                />
+                <ErrorList
+                  id={fields.location.errorId}
+                  errors={fields.location.errors}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 items-start gap-4">
+              <Label htmlFor={fields.company.id} className="pt-3">
+                Company
+              </Label>
+              <div className="col-span-2">
+                <Input
+                  className="max-w-xs"
+                  {...getInputProps(fields.company, { type: 'text' })}
+                />
+                <ErrorList
+                  id={fields.company.errorId}
+                  errors={fields.company.errors}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 items-start gap-4">
+              <Label htmlFor={fields.birthday.id} className="pt-3">
+                Birthday
+              </Label>
+              <div className="col-span-2">
+                <Input
+                  className="max-w-fit"
+                  {...getInputProps(fields.birthday, { type: 'date' })}
+                />
+                <ErrorList
+                  id={fields.birthday.errorId}
+                  errors={fields.birthday.errors}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+          </div>
+          <Separator className="my-6" />
+          <div className="grid grid-cols-3 items-start gap-3">
+            <div className="col-span-2 col-start-2">
               <ErrorList
-                id={fields.email.errorId}
-                errors={fields.email.errors}
-                className="mt-2"
+                id={form.errorId}
+                errors={form.errors}
+                className="mb-2"
               />
+              <div className="flex items-center gap-3">
+                <Button type="submit" size="sm">
+                  Save
+                </Button>
+                <CancelButton />
+              </div>
             </div>
           </div>
-          <div className="grid grid-cols-3 items-start gap-4">
-            <Label htmlFor={fields.phone.id} className="pt-3">
-              Phone
-            </Label>
-            <div className="col-span-2">
-              <Input
-                className="max-w-xs"
-                {...getInputProps(fields.phone, { type: 'tel' })}
-              />
-              <ErrorList
-                id={fields.phone.errorId}
-                errors={fields.phone.errors}
-                className="mt-2"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-3 items-start gap-4">
-            <Label htmlFor={fields.linkedin.id} className="pt-3">
-              LinkedIn
-            </Label>
-            <div className="col-span-2">
-              <Input
-                className="max-w-xs"
-                {...getInputProps(fields.linkedin, { type: 'url' })}
-              />
-              <ErrorList
-                id={fields.linkedin.errorId}
-                errors={fields.linkedin.errors}
-                className="mt-2"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-3 items-start gap-4">
-            <Label htmlFor={fields.social.id} className="pt-3">
-              Social URL
-            </Label>
-            <div className="col-span-2">
-              <Input
-                className="max-w-xs"
-                {...getInputProps(fields.social, { type: 'url' })}
-              />
-              <ErrorList
-                id={fields.social.errorId}
-                errors={fields.social.errors}
-                className="mt-2"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-3 items-start gap-4">
-            <Label htmlFor={fields.website.id} className="pt-3">
-              Website URL
-            </Label>
-            <div className="col-span-2">
-              <Input
-                className="max-w-xs"
-                {...getInputProps(fields.website, { type: 'url' })}
-              />
-              <ErrorList
-                id={fields.website.errorId}
-                errors={fields.website.errors}
-                className="mt-2"
-              />
-            </div>
-          </div>
-        </div>
-        <Separator className="my-6" />
-        <div className="grid gap-4">
-          <div className="grid grid-cols-3 items-start gap-4">
-            <Label htmlFor={fields.location.id} className="pt-3">
-              Location
-            </Label>
-            <div className="col-span-2">
-              <Input
-                className="max-w-sm"
-                {...getInputProps(fields.location, { type: 'text' })}
-              />
-              <ErrorList
-                id={fields.location.errorId}
-                errors={fields.location.errors}
-                className="mt-2"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-3 items-start gap-4">
-            <Label htmlFor={fields.company.id} className="pt-3">
-              Company
-            </Label>
-            <div className="col-span-2">
-              <Input
-                className="max-w-xs"
-                {...getInputProps(fields.company, { type: 'text' })}
-              />
-              <ErrorList
-                id={fields.company.errorId}
-                errors={fields.company.errors}
-                className="mt-2"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-3 items-start gap-4">
-            <Label htmlFor={fields.birthday.id} className="pt-3">
-              Birthday
-            </Label>
-            <div className="col-span-2">
-              <Input
-                className="max-w-fit"
-                {...getInputProps(fields.birthday, { type: 'date' })}
-              />
-              <ErrorList
-                id={fields.birthday.errorId}
-                errors={fields.birthday.errors}
-                className="mt-2"
-              />
-            </div>
-          </div>
-        </div>
-        <Separator className="my-6" />
-        <div className="grid grid-cols-3 items-start gap-3">
-          <div className="col-span-2 col-start-2">
-            <ErrorList
-              id={form.errorId}
-              errors={form.errors}
-              className="mb-2"
-            />
-            <div className="flex items-center gap-3">
-              <Button type="submit" size="sm">
-                Save
-              </Button>
-              <CancelButton />
-            </div>
-          </div>
-        </div>
-      </Form>
+        </Form>
+      </div>
     </>
   );
 }

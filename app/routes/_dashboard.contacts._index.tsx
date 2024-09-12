@@ -5,16 +5,18 @@ import { Button } from '~/components/ui/button';
 
 export default function Component() {
   return (
-    <EmptyState
-      title="No contact selected"
-      description="Select a contact on the left, or create a new contact."
-    >
-      <Form method="post" action="/contacts">
-        <Button type="submit" variant="secondary">
-          <PlusIcon className="mr-2 size-4" />
-          New contact
-        </Button>
-      </Form>
-    </EmptyState>
+    <div className="mx-auto max-w-3xl p-6">
+      <EmptyState
+        title="No contact selected"
+        description="Select a contact on the left, or create a new contact."
+      >
+        <Form method="post" action="/contacts">
+          <Button type="submit" variant="secondary">
+            <PlusIcon className="mr-2 size-4" />
+            New contact
+          </Button>
+        </Form>
+      </EmptyState>
+    </div>
   );
 }
