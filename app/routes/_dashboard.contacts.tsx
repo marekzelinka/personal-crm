@@ -79,9 +79,9 @@ export default function Component() {
             </Button>
           </Form>
         </div>
-        <nav className="flex-1 p-4">
+        <nav className="flex-1 overflow-y-auto p-4">
           {contacts.length ? (
-            <ul>
+            <ul className="space-y-1">
               {contacts.map((contact) => (
                 <li key={contact.id}>
                   <NavLink
