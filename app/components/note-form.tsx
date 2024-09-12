@@ -7,8 +7,9 @@ import {
 } from '@conform-to/react';
 import { getZodConstraint, parseWithZod } from '@conform-to/zod';
 import {} from '@radix-ui/react-icons';
-import { Form } from '@remix-run/react';
+import { Form, useSubmit } from '@remix-run/react';
 import { format } from 'date-fns';
+import { useRef } from 'react';
 import { z } from 'zod';
 import { ErrorList } from './forms';
 import { Button } from './ui/button';
@@ -21,10 +22,12 @@ export const NoteFormSchema = z.object({
     .trim()
     .min(1, 'Note is too short')
     .max(255, 'Note is too long'),
-  date: z.coerce.date({
-    required_error: 'Date is required',
-    invalid_type_error: 'Date is invalid.',
-  }),
+  date: z.coerce
+    .date({
+      required_error: 'Date is required',
+      invalid_type_error: 'Date is invalid.',
+    })
+    .transform((arg) => arg.toISOString()),
 });
 
 export function NoteForm({
@@ -32,6 +35,10 @@ export function NoteForm({
 }: {
   lastResult?: SubmissionResult | undefined;
 }) {
+  const submit = useSubmit();
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
   const [form, fields] = useForm({
     defaultValue: {
       date: format(new Date(), 'yyyy-MM-dd'),
@@ -41,6 +48,27 @@ export function NoteForm({
     onValidate: ({ formData }) => {
       return parseWithZod(formData, { schema: NoteFormSchema });
     },
+    onSubmit: (event, context) => {
+      event.preventDefault();
+
+      const formData = new FormData(event.currentTarget);
+      const submission = parseWithZod(formData, { schema: NoteFormSchema });
+      if (submission.status !== 'success') {
+        return;
+      }
+
+      submit(submission.value, {
+        method: context.method,
+        fetcherKey: window.crypto.randomUUID(),
+        navigate: false,
+        unstable_flushSync: true,
+      });
+
+      if (textareaRef.current) {
+        textareaRef.current.value = '';
+        textareaRef.current.focus();
+      }
+    },
   });
 
   return (
@@ -48,6 +76,15 @@ export function NoteForm({
       <fieldset className="relative" aria-label="Create a new note">
         <div className="overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring">
           <Textarea
+            ref={textareaRef}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                event.currentTarget.form?.dispatchEvent(
+                  new Event('submit', { bubbles: true, cancelable: true }),
+                );
+              }
+            }}
             className="resize-none border-0 p-3 shadow-none focus-visible:ring-0"
             placeholder="What would you like to add?"
             aria-label="Note"

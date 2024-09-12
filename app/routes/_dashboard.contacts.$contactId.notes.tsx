@@ -4,21 +4,24 @@ import {
   json,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
+  type SerializeFrom,
 } from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
-import { format, isToday, isYesterday } from 'date-fns';
+import { useActionData, useFetchers, useLoaderData } from '@remix-run/react';
+import { compareAsc, format, isToday, isYesterday } from 'date-fns';
 import { EmptyState } from '~/components/empty-state';
 import { NoteForm, NoteFormSchema } from '~/components/note-form';
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { requireUserId } from '~/lib/auth.server';
 import { db } from '~/lib/db.server';
 
+type LoaderData = SerializeFrom<typeof loader>;
+type Note = LoaderData['notes'][number];
+
 export async function loader({ params }: LoaderFunctionArgs) {
   invariant(params.contactId, 'Missing contactId param');
   const notes = await db.note.findMany({
-    select: { id: true, text: true, date: true },
+    select: { id: true, text: true, date: true, createdAt: true },
     where: { contactId: params.contactId },
-    orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
   });
 
   return json({ notes });
@@ -76,7 +79,22 @@ export default function Component() {
 function NoteList() {
   const { notes } = useLoaderData<typeof loader>();
 
-  if (!notes.length) {
+  const notesById = new Map(notes.map((note) => [note.id, note]));
+
+  // Merge optimistic and existing entries
+  const optimisticNotes = useOptimisticNotes();
+  for (const optimisticNote of optimisticNotes) {
+    const note = notesById.get(optimisticNote.id);
+    const merged = note ? { ...note, ...optimisticNote } : optimisticNote;
+    notesById.set(optimisticNote.id, merged);
+  }
+
+  const notesToShow = [...notesById.values()].sort(
+    (a, b) =>
+      compareAsc(b.date, a.date) || compareAsc(b.createdAt, a.createdAt),
+  );
+
+  if (!notesToShow.length) {
     return (
       <EmptyState
         title="No notes"
@@ -87,7 +105,7 @@ function NoteList() {
 
   return (
     <ul className="grid gap-8">
-      {notes.map((note) => (
+      {notesToShow.map((note) => (
         <li key={note.id} className="grid gap-1">
           <div className="block text-xs text-muted-foreground">
             {isToday(note.date)
@@ -101,4 +119,31 @@ function NoteList() {
       ))}
     </ul>
   );
+}
+
+function useOptimisticNotes() {
+  type OptimisticNoteFetcher = ReturnType<typeof useFetchers>[number] & {
+    formData: FormData;
+  };
+
+  return useFetchers()
+    .filter(
+      (fetcher): fetcher is OptimisticNoteFetcher =>
+        fetcher.formData !== undefined,
+    )
+    .map((fetcher): Note | null => {
+      const submission = parseWithZod(fetcher.formData, {
+        schema: NoteFormSchema,
+      });
+      if (submission.status !== 'success') {
+        return null;
+      }
+
+      return {
+        ...submission.value,
+        id: fetcher.key,
+        createdAt: new Date().toISOString(),
+      };
+    })
+    .filter((note) => note !== null);
 }
