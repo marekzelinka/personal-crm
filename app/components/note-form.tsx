@@ -90,7 +90,7 @@ export function NoteForm({
             aria-label="Note"
             {...getTextareaProps(fields.text)}
           />
-          {/* Spacer element to match the height of the toolbar */}
+          {/* Spacer element to match the height of the toolbar below */}
           <div className="h-12" aria-hidden />
         </div>
         <div className="absolute inset-x-px bottom-0">

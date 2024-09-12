@@ -82,13 +82,8 @@ export function BreadcrumbSeparator({
   ...props
 }: ComponentProps<'li'>) {
   return (
-    <li
-      role="presentation"
-      className={cx('[&>svg]:size-3.5', className)}
-      aria-hidden
-      {...props}
-    >
-      {children ?? <ChevronRightIcon />}
+    <li role="presentation" className={className} aria-hidden {...props}>
+      {children ?? <ChevronRightIcon aria-hidden />}
     </li>
   );
 }
@@ -106,7 +101,7 @@ export function BreadcrumbEllipsis({
       aria-hidden
       {...props}
     >
-      <DotsHorizontalIcon className="size-4" />
+      <DotsHorizontalIcon aria-hidden />
     </span>
   );
 }
