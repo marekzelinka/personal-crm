@@ -6,8 +6,10 @@ import {
   type SubmissionResult,
 } from '@conform-to/react';
 import { getZodConstraint, parseWithZod } from '@conform-to/zod';
+import type { Note } from '@prisma/client';
 import {} from '@radix-ui/react-icons';
-import { Form, useSubmit } from '@remix-run/react';
+import type { SerializeFrom } from '@remix-run/node';
+import { Form, useNavigation, useSubmit } from '@remix-run/react';
 import { format } from 'date-fns';
 import { useRef } from 'react';
 import { z } from 'zod';
@@ -32,16 +34,24 @@ export const NoteFormSchema = z.object({
 
 export function NoteForm({
   lastResult,
+  note,
 }: {
-  lastResult?: SubmissionResult | undefined;
+  lastResult: SubmissionResult | undefined;
+  note?: Pick<SerializeFrom<Note>, 'text' | 'date'>;
 }) {
+  const editMode = Boolean(note);
+
+  const navigation = useNavigation();
+  const isSavingEdits = navigation.formData?.get('intent') === 'editNote';
+
   const submit = useSubmit();
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [form, fields] = useForm({
     defaultValue: {
-      date: format(new Date(), 'yyyy-MM-dd'),
+      ...note,
+      date: format(note?.date ?? new Date(), 'yyyy-MM-dd'),
     },
     constraint: getZodConstraint(NoteFormSchema),
     lastResult: lastResult,
@@ -49,6 +59,10 @@ export function NoteForm({
       return parseWithZod(formData, { schema: NoteFormSchema });
     },
     onSubmit: (event, context) => {
+      if (editMode) {
+        return;
+      }
+
       event.preventDefault();
 
       const formData = new FormData(event.currentTarget);
@@ -73,7 +87,11 @@ export function NoteForm({
 
   return (
     <Form method="POST" {...getFormProps(form)}>
-      <fieldset className="relative" aria-label="Create a new note">
+      {editMode ? <input type="hidden" name="intent" value="editNote" /> : null}
+      <fieldset
+        disabled={isSavingEdits}
+        className="relative disabled:pointer-events-none disabled:opacity-70"
+      >
         <div className="overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring">
           <Textarea
             ref={textareaRef}
@@ -101,7 +119,7 @@ export function NoteForm({
               {...getInputProps(fields.date, { type: 'date' })}
             />
             <Button type="submit" size="sm" className="ml-auto">
-              Save
+              {isSavingEdits ? 'Saving…' : 'Save'}
             </Button>
           </div>
         </div>

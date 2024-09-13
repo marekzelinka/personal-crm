@@ -191,7 +191,7 @@ function NoteItem({ note }: { note: Note }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
-              <Link to="edit">Edit</Link>
+              <Link to={`${note.id}/edit`}>Edit</Link>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={copy}>Copy</DropdownMenuItem>
           </DropdownMenuContent>
