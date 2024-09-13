@@ -173,9 +173,9 @@ function NoteItem({ note }: { note: Note }) {
       <div className="flex flex-none items-center gap-2">
         <p className="text-sm text-muted-foreground">
           {isToday(note.date)
-            ? 'today'
+            ? 'Today'
             : isYesterday(note.date)
-              ? 'yesterday'
+              ? 'Yesterday'
               : format(note.date, 'PP')}
         </p>
         <DropdownMenu>
