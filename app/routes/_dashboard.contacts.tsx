@@ -134,7 +134,7 @@ export default function Component() {
                           className={cx(
                             'flex-none',
                             isActive
-                              ? ''
+                              ? 'text-primary-foreground'
                               : isPending
                                 ? 'text-foreground'
                                 : 'text-muted-foreground group-hover:text-foreground',
