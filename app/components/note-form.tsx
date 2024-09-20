@@ -22,8 +22,7 @@ export const NoteFormSchema = z.object({
   text: z
     .string({ required_error: 'Note is required' })
     .trim()
-    .min(1, 'Note is too short')
-    .max(255, 'Note is too long'),
+    .min(1, 'Note is too short'),
   date: z.coerce
     .date({
       required_error: 'Date is required',
@@ -103,6 +102,7 @@ export function NoteForm({
                 );
               }
             }}
+            rows={6}
             className="resize-none border-0 p-3 shadow-none focus-visible:ring-0"
             placeholder="What would you like to add?"
             aria-label="Note"

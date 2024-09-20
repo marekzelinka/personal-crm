@@ -14,6 +14,7 @@ import {
   useLoaderData,
 } from '@remix-run/react';
 import { compareAsc, format, isToday, isYesterday } from 'date-fns';
+import { useState } from 'react';
 import { useSpinDelay } from 'spin-delay';
 import { EmptyState } from '~/components/empty-state';
 import { NoteForm, NoteFormSchema } from '~/components/note-form';
@@ -165,11 +166,11 @@ function useOptimisticNotes() {
 }
 
 function NoteItem({ note }: { note: Note }) {
-  const { copy } = useClipboard(note.text);
-
   return (
-    <li key={note.id} className="flex gap-4">
-      <div className="flex-auto py-1 text-sm">{note.text}</div>
+    <li key={note.id} className="flex items-start gap-6">
+      <div className="flex-auto py-1">
+        <NoteText note={note} />
+      </div>
       <div className="flex flex-none items-center gap-2">
         <p className="text-sm text-muted-foreground">
           {isToday(note.date)
@@ -190,13 +191,43 @@ function NoteItem({ note }: { note: Note }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <CopyNoteAction note={note} />
             <DropdownMenuItem asChild>
               <Link to={`${note.id}/edit`}>Edit</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={copy}>Copy</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
     </li>
   );
+}
+
+function NoteText({ note }: { note: Pick<Note, 'text'> }) {
+  const shouldClamp = note.text.length > 255;
+  const [isClamped, setIsClamped] = useState(shouldClamp);
+
+  const text = isClamped
+    ? note.text.substring(0, 255).trimEnd() + '…'
+    : note.text;
+
+  return (
+    <div className="space-y-2">
+      <p className="text-sm">{text}</p>
+      {shouldClamp ? (
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => setIsClamped((isClamped) => !isClamped)}
+        >
+          {isClamped ? 'Show more' : 'Show less'}
+        </Button>
+      ) : null}
+    </div>
+  );
+}
+
+function CopyNoteAction({ note }: { note: Pick<Note, 'text'> }) {
+  const { copy } = useClipboard(note.text);
+
+  return <DropdownMenuItem onClick={copy}>Copy</DropdownMenuItem>;
 }
