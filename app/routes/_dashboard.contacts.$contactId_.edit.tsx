@@ -210,7 +210,7 @@ export default function Component() {
 
   return (
     <>
-      <Breadcrumb>
+      <Breadcrumb className="bg-background">
         <div className="mx-auto flex h-10 max-w-3xl items-center px-6">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -248,7 +248,10 @@ export default function Component() {
                 Avatar URL
               </Label>
               <div className="col-span-2">
-                <Input {...getInputProps(fields.avatar, { type: 'url' })} />
+                <Input
+                  className="bg-background"
+                  {...getInputProps(fields.avatar, { type: 'url' })}
+                />
                 <ErrorList
                   id={fields.avatar.errorId}
                   errors={fields.avatar.errors}
@@ -262,8 +265,8 @@ export default function Component() {
               </Label>
               <div className="col-span-2">
                 <Input
+                  className="max-w-xs bg-background"
                   {...getInputProps(fields.first, { type: 'text' })}
-                  className="max-w-xs"
                 />
                 <ErrorList
                   id={fields.first.errorId}
@@ -278,7 +281,7 @@ export default function Component() {
               </Label>
               <div className="col-span-2">
                 <Input
-                  className="max-w-xs"
+                  className="max-w-xs bg-background"
                   {...getInputProps(fields.last, { type: 'text' })}
                 />
                 <ErrorList
@@ -293,7 +296,11 @@ export default function Component() {
                 Bio
               </Label>
               <div className="col-span-2">
-                <Textarea rows={4} {...getTextareaProps(fields.bio)} />
+                <Textarea
+                  rows={4}
+                  className="bg-background"
+                  {...getTextareaProps(fields.bio)}
+                />
                 <ErrorList
                   id={fields.bio.errorId}
                   errors={fields.bio.errors}
@@ -310,8 +317,8 @@ export default function Component() {
               </Label>
               <div className="col-span-2">
                 <Input
+                  className="max-w-xs bg-background"
                   {...getInputProps(fields.email, { type: 'email' })}
-                  className="max-w-xs"
                 />
                 <ErrorList
                   id={fields.email.errorId}
@@ -326,7 +333,7 @@ export default function Component() {
               </Label>
               <div className="col-span-2">
                 <Input
-                  className="max-w-xs"
+                  className="max-w-xs bg-background"
                   {...getInputProps(fields.phone, { type: 'tel' })}
                 />
                 <ErrorList
@@ -342,7 +349,7 @@ export default function Component() {
               </Label>
               <div className="col-span-2">
                 <Input
-                  className="max-w-xs"
+                  className="max-w-xs bg-background"
                   {...getInputProps(fields.linkedin, { type: 'url' })}
                 />
                 <ErrorList
@@ -358,7 +365,7 @@ export default function Component() {
               </Label>
               <div className="col-span-2">
                 <Input
-                  className="max-w-xs"
+                  className="max-w-xs bg-background"
                   {...getInputProps(fields.social, { type: 'url' })}
                 />
                 <ErrorList
@@ -374,7 +381,7 @@ export default function Component() {
               </Label>
               <div className="col-span-2">
                 <Input
-                  className="max-w-xs"
+                  className="max-w-xs bg-background"
                   {...getInputProps(fields.website, { type: 'url' })}
                 />
                 <ErrorList
@@ -393,7 +400,7 @@ export default function Component() {
               </Label>
               <div className="col-span-2">
                 <Input
-                  className="max-w-sm"
+                  className="max-w-sm bg-background"
                   {...getInputProps(fields.location, { type: 'text' })}
                 />
                 <ErrorList
@@ -409,7 +416,7 @@ export default function Component() {
               </Label>
               <div className="col-span-2">
                 <Input
-                  className="max-w-xs"
+                  className="max-w-xs bg-background"
                   {...getInputProps(fields.company, { type: 'text' })}
                 />
                 <ErrorList
@@ -425,7 +432,7 @@ export default function Component() {
               </Label>
               <div className="col-span-2">
                 <Input
-                  className="max-w-fit"
+                  className="max-w-fit bg-background"
                   {...getInputProps(fields.birthday, { type: 'date' })}
                 />
                 <ErrorList
@@ -445,9 +452,7 @@ export default function Component() {
                 className="mb-2"
               />
               <div className="flex items-center gap-3">
-                <Button type="submit" size="sm">
-                  Save
-                </Button>
+                <Button type="submit">Save</Button>
                 <CancelButton />
               </div>
             </div>
@@ -462,12 +467,7 @@ function CancelButton() {
   const navigate = useNavigate();
 
   return (
-    <Button
-      type="button"
-      size="sm"
-      variant="ghost"
-      onClick={() => navigate(-1)}
-    >
+    <Button type="button" variant="outline" onClick={() => navigate(-1)}>
       Cancel
     </Button>
   );

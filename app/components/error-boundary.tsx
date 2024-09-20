@@ -12,10 +12,10 @@ export function GeneralErrorBoundary() {
       <div className="mx-auto flex size-10 items-center justify-center rounded-full bg-destructive">
         <ExclamationTriangleIcon className="size-5 text-destructive-foreground" />
       </div>
-      <h3 className="mt-3 text-2xl font-bold tracking-tight">
+      <h3 className="mt-4 text-2xl font-bold tracking-tight">
         Oops! An error occurred…
       </h3>
-      <p className="text-sm text-muted-foreground">{errorMessage}</p>
+      <p className="mt-2 text-sm text-muted-foreground">{errorMessage}</p>
     </div>
   );
 }

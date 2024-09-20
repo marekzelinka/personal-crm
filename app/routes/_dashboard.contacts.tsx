@@ -72,12 +72,12 @@ export default function Component() {
 
   return (
     <>
-      <main className="pl-96">
+      <main className="h-full bg-muted/40 pl-96">
         <ContactLoadingOverlay>
           <Outlet />
         </ContactLoadingOverlay>
       </main>
-      <aside className="fixed inset-y-0 flex w-96 flex-col border-r">
+      <aside className="fixed inset-y-0 flex w-96 flex-col border-r bg-background">
         <div className="flex gap-4 bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <search role="search" className="flex-1">
             <SearchBar />

@@ -19,7 +19,7 @@ export default function Component() {
           <LogoutForm />
         </div>
       </nav>
-      <div className="isolate pl-14">
+      <div className="isolate h-full pl-14">
         <Outlet />
       </div>
     </>
@@ -35,8 +35,8 @@ function LogoutForm() {
         <TooltipTrigger asChild>
           <Button
             type="submit"
-            variant="ghost"
             size="icon"
+            variant="ghost"
             className="text-muted-foreground hover:bg-background hover:text-foreground"
             aria-label={label}
           >

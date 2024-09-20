@@ -202,12 +202,14 @@ function NoteItem({ note }: { note: Note }) {
   );
 }
 
+const MAX_LENGTH = 255;
+
 function NoteText({ note }: { note: Pick<Note, 'text'> }) {
-  const shouldClamp = note.text.length > 255;
+  const shouldClamp = note.text.length > MAX_LENGTH;
   const [isClamped, setIsClamped] = useState(shouldClamp);
 
   const text = isClamped
-    ? note.text.substring(0, 255).trimEnd() + '…'
+    ? note.text.substring(0, MAX_LENGTH).trimEnd() + '…'
     : note.text;
 
   return (

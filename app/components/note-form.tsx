@@ -109,10 +109,10 @@ export function NoteForm({
             {...getTextareaProps(fields.text)}
           />
           {/* Spacer element to match the height of the toolbar below */}
-          <div className="h-12" aria-hidden />
+          <div className="h-14" aria-hidden />
         </div>
         <div className="absolute inset-x-px bottom-0">
-          <div className="flex items-center px-3 pb-3">
+          <div className="flex items-center px-3 py-3">
             <Input
               className="max-w-fit"
               aria-label="Date"

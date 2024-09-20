@@ -15,7 +15,7 @@ export function EmptyState({
       {description ? (
         <p className="mt-2 text-sm text-muted-foreground">{description}</p>
       ) : null}
-      {children ? <div className="mt-6">{children}</div> : null}
+      {children ? <div className="mt-4">{children}</div> : null}
     </div>
   );
 }

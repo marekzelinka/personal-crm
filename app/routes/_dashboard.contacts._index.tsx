@@ -11,7 +11,7 @@ export default function Component() {
         description="Select a contact on the left, or create a new contact."
       >
         <Form method="post" action="/contacts">
-          <Button type="submit" variant="secondary">
+          <Button type="submit" size="sm">
             <PlusIcon className="mr-2" aria-hidden />
             New contact
           </Button>

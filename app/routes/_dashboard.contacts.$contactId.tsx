@@ -125,7 +125,7 @@ export default function Component() {
 
   return (
     <>
-      <Breadcrumb>
+      <Breadcrumb className="bg-background">
         <div className="mx-auto flex h-10 max-w-3xl items-center px-6">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -145,11 +145,10 @@ export default function Component() {
           <div className="flex flex-none">
             <Avatar key={contact.avatar} className="size-32">
               <AvatarImage src={contact.avatar ?? undefined} alt="" />
-              <AvatarFallback>
+              <AvatarFallback className="bg-background">
                 <svg
                   viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="h-full w-full text-primary-foreground"
+                  className="h-full w-full fill-muted"
                   aria-hidden
                 >
                   <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -218,7 +217,7 @@ export default function Component() {
                     'inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
                     isActive
                       ? 'bg-background text-foreground shadow'
-                      : 'text-muted-foreground hover:text-foreground',
+                      : 'text-muted-foreground',
                   )
                 }
               >
@@ -252,7 +251,6 @@ function Favorite({ contact }: { contact: Pick<Contact, 'id' | 'favorite'> }) {
       <Toggle
         type="submit"
         size="sm"
-        variant="ghost"
         pressed={favorite}
         aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
       >
