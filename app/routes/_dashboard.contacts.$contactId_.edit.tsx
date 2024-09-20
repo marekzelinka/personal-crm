@@ -8,7 +8,7 @@ import { getZodConstraint, parseWithZod } from '@conform-to/zod';
 import { invariant, invariantResponse } from '@epic-web/invariant';
 import { ChevronLeftIcon } from '@radix-ui/react-icons';
 import {
-  json,
+  unstable_data as data,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
   type MetaFunction,
@@ -142,7 +142,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     { status: 404 },
   );
 
-  return json({ contact });
+  return { contact };
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -163,7 +163,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const submission = parseWithZod(formData, { schema: EditContactSchema });
 
   if (submission.status !== 'success') {
-    return json(
+    return data(
       { result: submission.reply() },
       { status: submission.status === 'error' ? 400 : 200 },
     );

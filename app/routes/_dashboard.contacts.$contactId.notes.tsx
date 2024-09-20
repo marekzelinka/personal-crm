@@ -2,7 +2,7 @@ import { parseWithZod } from '@conform-to/zod';
 import { invariant, invariantResponse } from '@epic-web/invariant';
 import { DotsHorizontalIcon, UpdateIcon } from '@radix-ui/react-icons';
 import {
-  json,
+  unstable_data as data,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
   type SerializeFrom,
@@ -39,7 +39,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
     where: { contactId: params.contactId },
   });
 
-  return json({ notes });
+  return { notes };
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -60,7 +60,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const submission = parseWithZod(formData, { schema: NoteFormSchema });
 
   if (submission.status !== 'success') {
-    return json(
+    return data(
       { result: submission.reply() },
       { status: submission.status === 'error' ? 400 : 200 },
     );
@@ -72,7 +72,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     data: { text, date, contact: { connect: { id: params.contactId } } },
   });
 
-  return json({ result: submission.reply({ resetForm: true }) });
+  return { result: submission.reply({ resetForm: true }) };
 }
 
 export default function Component() {
@@ -143,10 +143,9 @@ function useOptimisticNotes() {
   };
 
   return useFetchers()
-    .filter(
-      (fetcher): fetcher is OptimisticNoteFetcher =>
-        fetcher.formData !== undefined,
-    )
+    .filter((fetcher): fetcher is OptimisticNoteFetcher => {
+      return fetcher.formData !== undefined;
+    })
     .map((fetcher): Note | null => {
       const submission = parseWithZod(fetcher.formData, {
         schema: NoteFormSchema,
@@ -158,7 +157,8 @@ function useOptimisticNotes() {
       return {
         ...submission.value,
         id: fetcher.key,
-        createdAt: new Date().toISOString(),
+        date: new Date(submission.value.date),
+        createdAt: new Date(),
       };
     })
     .filter((note) => note !== null);

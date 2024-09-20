@@ -1,7 +1,11 @@
 import { parseWithZod } from '@conform-to/zod';
 import { invariant, invariantResponse } from '@epic-web/invariant';
 import { ChevronLeftIcon, TrashIcon } from '@radix-ui/react-icons';
-import { json, redirect, type ActionFunctionArgs } from '@remix-run/node';
+import {
+  unstable_data as data,
+  redirect,
+  type ActionFunctionArgs,
+} from '@remix-run/node';
 import {
   Form,
   Link,
@@ -31,7 +35,7 @@ export async function loader({ params }: ActionFunctionArgs) {
     status: 404,
   });
 
-  return json({ note });
+  return { note };
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -68,7 +72,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     const submission = parseWithZod(formData, { schema: NoteFormSchema });
 
     if (submission.status !== 'success') {
-      return json(
+      return data(
         { result: submission.reply() },
         { status: submission.status === 'error' ? 400 : 200 },
       );

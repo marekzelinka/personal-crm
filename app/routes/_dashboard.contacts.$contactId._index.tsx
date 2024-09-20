@@ -1,6 +1,6 @@
 import { invariant, invariantResponse } from '@epic-web/invariant';
 import { Pencil1Icon } from '@radix-ui/react-icons';
-import { json, type LoaderFunctionArgs } from '@remix-run/node';
+import { type LoaderFunctionArgs } from '@remix-run/node';
 import { Form, Link, useLoaderData } from '@remix-run/react';
 import { format, formatDistanceStrict } from 'date-fns';
 import { EmptyState } from '~/components/empty-state';
@@ -33,7 +33,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     { status: 404 },
   );
 
-  return json({ contact });
+  return { contact };
 }
 
 export default function Component() {

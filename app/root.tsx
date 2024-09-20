@@ -1,4 +1,4 @@
-import { json, type LoaderFunctionArgs } from '@remix-run/node';
+import { type LoaderFunctionArgs } from '@remix-run/node';
 import {
   Links,
   Meta,
@@ -13,7 +13,7 @@ import './tailwind.css';
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request);
 
-  return json({ user });
+  return { user };
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {

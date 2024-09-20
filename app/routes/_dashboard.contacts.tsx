@@ -6,7 +6,6 @@ import {
   UpdateIcon,
 } from '@radix-ui/react-icons';
 import {
-  json,
   redirect,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
@@ -54,7 +53,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   contacts = contacts.sort(sortBy('last', 'createdAt'));
 
-  return json({ contacts });
+  return { contacts };
 }
 
 export async function action({ request }: ActionFunctionArgs) {

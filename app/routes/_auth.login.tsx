@@ -1,7 +1,7 @@
 import { getFormProps, getInputProps, useForm } from '@conform-to/react';
 import { getZodConstraint, parseWithZod } from '@conform-to/zod';
 import {
-  json,
+  unstable_data as data,
   type ActionFunctionArgs,
   type MetaFunction,
 } from '@remix-run/node';
@@ -55,7 +55,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
 
   if (submission.status !== 'success') {
-    return json(
+    return data(
       { result: submission.reply({ hideFields: ['password'] }) },
       { status: submission.status === 'error' ? 400 : 200 },
     );

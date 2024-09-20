@@ -8,7 +8,6 @@ import {
   TrashIcon,
 } from '@radix-ui/react-icons';
 import {
-  json,
   redirect,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
@@ -62,7 +61,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     { status: 404 },
   );
 
-  return json({ contact });
+  return { contact };
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -90,7 +89,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
       where: { id: params.contactId, userId },
     });
 
-    return json({ ok: true });
+    return { ok: true };
   }
 
   if (formData.get('intent') === 'delete') {
