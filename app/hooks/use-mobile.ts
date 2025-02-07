@@ -6,18 +6,16 @@ export function useIsMobile() {
   const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
-    const onChange = () => {
+    const handleChange = () => {
       setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     };
 
-    const mediaQueryList = window.matchMedia(
-      `(max-width: ${MOBILE_BREAKPOINT - 1}px)`,
-    );
-    mediaQueryList.addEventListener("change", onChange);
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    mql.addEventListener("change", handleChange);
 
     setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
 
-    return () => mediaQueryList.removeEventListener("change", onChange);
+    return () => mql.removeEventListener("change", handleChange);
   }, []);
 
   return Boolean(isMobile);

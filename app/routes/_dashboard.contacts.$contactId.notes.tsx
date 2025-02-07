@@ -180,13 +180,9 @@ function NoteItem({ note }: { note: Note }) {
         </p>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="size-7"
-              aria-label="Toggle menu"
-            >
+            <Button size="icon" variant="ghost" className="size-7">
               <DotsHorizontalIcon aria-hidden />
+              <span className="sr-only">Toggle menu</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
