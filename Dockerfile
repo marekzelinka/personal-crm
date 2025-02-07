@@ -1,8 +1,8 @@
 # syntax = docker/dockerfile:1
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=20.18.0
-FROM node:${NODE_VERSION}-slim as base
+ARG NODE_VERSION=22.13.1
+FROM node:${NODE_VERSION}-slim AS base
 
 LABEL fly_launch_runtime="Node.js/Prisma"
 
@@ -13,12 +13,12 @@ WORKDIR /app
 ENV NODE_ENV="production"
 
 # Install pnpm
-ARG PNPM_VERSION=9.14.4
+ARG PNPM_VERSION=10.2.0
 RUN npm install -g pnpm@$PNPM_VERSION
 
 
 # Throw-away build stage to reduce size of final image
-FROM base as build
+FROM base AS build
 
 # Install packages needed to build node modules
 RUN apt-get update -qq && \
