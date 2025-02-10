@@ -1,6 +1,6 @@
 import { redirect } from "react-router";
 import { logout } from "~/lib/auth.server";
-import type { Route } from "./+types/_auth.logout";
+import type { Route } from "./+types/signout";
 
 export async function loader() {
   return redirect("/");
