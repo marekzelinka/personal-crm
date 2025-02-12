@@ -15,6 +15,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { createUserSession, verifyLogin } from "~/lib/auth.server";
+import { EmailSchema, PasswordSchema } from "~/lib/user-validation";
 import { composeSafeRedirectUrl } from "~/lib/utils";
 import type { Route } from "./+types/signin";
 
@@ -30,23 +31,11 @@ export const meta: Route.MetaFunction = () => {
 };
 
 const SigninFormSchema = z.object({
-  email: z
-    .string({ required_error: "Email is required" })
-    .trim()
-    .email("Email is invalid")
-    .min(3, "Email is too short")
-    // Users can type the email in any case, but we store it in lowercase
-    .transform((arg) => arg.toLowerCase()),
-  password: z
-    .string({ required_error: "Password is required" })
-    .trim()
-    .min(6, "Password is too short"),
+  email: EmailSchema,
+  password: PasswordSchema,
 });
 
 export async function action({ request }: Route.ActionArgs) {
-  const url = new URL(request.url);
-  const redirectTo = composeSafeRedirectUrl(url.searchParams.get("redirectTo"));
-
   const formData = await request.formData();
 
   const submission = await parseWithZod(formData, {
@@ -73,6 +62,9 @@ export async function action({ request }: Route.ActionArgs) {
   }
 
   const { user } = submission.value;
+
+  const url = new URL(request.url);
+  const redirectTo = composeSafeRedirectUrl(url.searchParams.get("redirectTo"));
 
   throw await createUserSession({
     request,

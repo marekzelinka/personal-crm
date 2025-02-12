@@ -1,4 +1,4 @@
-import { HexagonIcon } from "lucide-react";
+import { ArrowRightIcon, HexagonIcon } from "lucide-react";
 import { Link } from "react-router";
 import { buttonVariants } from "~/components/ui/button";
 import { useOptionalUser } from "~/lib/user";
@@ -20,9 +20,9 @@ export default function Welcome() {
 
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="flex w-full max-w-3xl flex-col gap-4">
+      <div className="flex w-full max-w-3xl flex-col gap-2">
         <Link
-          to="."
+          to="/"
           className="flex items-center gap-2 self-center font-medium"
         >
           <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
@@ -41,7 +41,7 @@ export default function Welcome() {
           <div className="flex w-full items-center justify-center gap-4 pt-3">
             {user ? (
               <Link to="contacts" className={buttonVariants()}>
-                Continue as {user.email}
+                Continue as {user.email} <ArrowRightIcon aria-hidden />
               </Link>
             ) : (
               <>
