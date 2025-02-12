@@ -11,31 +11,26 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(uuid()) @map("user_id")
-  username String    @unique
-  first    String
-  last     String
-  email    String    @unique
+  id    Int    @id @default(autoincrement())
+  email String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   password Password?
   contacts Contact[]
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("user")
 }
 
 model Password {
+  salt String
   hash String
 
-  userId String @unique @map("user_id")
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  @@map("password")
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Contact {
-  id       String   @id @default(uuid()) @map("contact_id")
+  id       Int      @id @default(autoincrement())
   first    String?
   last     String?
   avatar   String?
@@ -49,27 +44,24 @@ model Contact {
   location String?
   company  String?
   birthday String?
-  notes    Note[]
 
-  userId String @map("user_id")
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@map("contact")
+  notes Note[]
 }
 
 model Note {
-  id   String   @id @default(uuid()) @map("note_id")
+  id   String   @id @default(uuid())
   text String
   date DateTime
 
-  contactId String  @map("contact_id")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contactId Int
   contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("note")
 }

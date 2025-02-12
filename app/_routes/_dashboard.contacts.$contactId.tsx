@@ -233,9 +233,11 @@ function Favorite({ contact }: { contact: Pick<Contact, "id" | "favorite"> }) {
         size="sm"
         variant="outline"
         pressed={favorite}
-        aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
       >
         {favorite ? <StarFilledIcon aria-hidden /> : <StarIcon aria-hidden />}
+        <span className="sr-only">
+          {favorite ? "Remove from favorites" : "Add to favorites"}
+        </span>
       </Toggle>
     </fetcher.Form>
   );

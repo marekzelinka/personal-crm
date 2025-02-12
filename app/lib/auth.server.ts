@@ -1,5 +1,5 @@
 import type { Password, User } from "@prisma/client";
-import bcrypt from "bcryptjs";
+import * as crypto from "node:crypto";
 import { redirect, redirectDocument } from "react-router";
 import { db } from "./db.server";
 import { authSessionStorage, getAuthSession } from "./session.server";
@@ -60,7 +60,7 @@ export async function createUserSession({
   redirectTo,
 }: {
   request: Request;
-  userId: string;
+  userId: User["id"];
   remember: boolean;
   redirectTo: string;
 }) {
@@ -79,21 +79,18 @@ export async function createUserSession({
 }
 
 export async function createUser({
-  username,
-  first,
-  last,
   email,
   password,
-}: Pick<User, "username" | "first" | "last" | "email"> & { password: string }) {
-  const hashedPassword = await bcrypt.hash(password, 10);
+}: Pick<User, "email"> & { password: string }) {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hashedPassword = crypto
+    .pbkdf2Sync(password, salt, 100000, 64, "sha512")
+    .toString("hex");
 
   return await db.user.create({
     data: {
-      username,
-      first,
-      last,
       email,
-      password: { create: { hash: hashedPassword } },
+      password: { create: { salt, hash: hashedPassword } },
     },
   });
 }
@@ -110,11 +107,10 @@ export async function verifyLogin(
     return null;
   }
 
-  const isValid = await bcrypt.compare(
-    password,
-    userWithPassword.password.hash,
-  );
-  if (!isValid) {
+  const hashedPassword = crypto
+    .pbkdf2Sync(password, userWithPassword.password.salt, 100000, 64, "sha512")
+    .toString("hex");
+  if (hashedPassword !== userWithPassword.password.hash) {
     return null;
   }
 
